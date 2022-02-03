@@ -172,7 +172,7 @@ If the response is output to another program there is no colours:
 > rurl :9200/_nodes | more
 ```
 
-But you can preserve the colors with the ```--pretty=color``` option and ```less -R```:
+But you can preserve the colours with the ```--pretty=color``` option and ```less -R```:
 
 ```bash
 > rurl :9200/_nodes --pretty=color | less -R
