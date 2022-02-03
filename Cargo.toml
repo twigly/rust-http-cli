@@ -8,7 +8,7 @@ description = "A user-friendly command-line tool to request HTTP APis"
 readme = "README.md"
 homepage = "https://github.com/twigly/rurl"
 repository = "https://github.com/twigly/rurl"
-keywords = ["cli", "api", "http", "json", "rest", "terminal", "tool", "devops", "development"]
+keywords = ["cli", "http", "terminal", "tool", "devops"]
 categories = ["command-line-utilities"]
 
 [dependencies]
