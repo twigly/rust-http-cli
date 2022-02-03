@@ -2,28 +2,28 @@
 
 Not available yet.
 
-# Binaries
+## Binaries
 
 Binaries are available here ...
 
-# MacOS
+## MacOS
 
 ```bash
 > brew install rurl
 ```
 
-# Ubuntu
+## Ubuntu
 
 ```bash
 > sudo apt install rurl
 ```
 
-# Cargo
+## Cargo
 
 ```bash
 > cargo install rurl
 ```
 
-# More platforms
+## More platforms
 
 Help welcome ;-)
