@@ -1,8 +1,8 @@
 [package]
 name = "rurl"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
-authors = ["Arno"]
+authors = ["twigly"]
 license = "MIT"
 description = "A user-friendly command-line tool to request HTTP APis"
 readme = "README.md"
