@@ -1,0 +1,31 @@
+[package]
+name = "rurl"
+version = "0.1.1"
+edition = "2021"
+authors = ["Arno"]
+license = "MIT"
+description = "A user-friendly command-line tool to request HTTP APis"
+readme = "README.md"
+homepage = "https://github.com/twigly/rurl"
+repository = "https://github.com/twigly/rurl"
+keywords = ["cli", "api", "http", "json", "rest", "terminal", "tool", "devops", "development"]
+categories = ["command-line-utilities"]
+
+[dependencies]
+atty = "0.2.14"
+content_inspector = "0.2.4"
+indicatif = "0.16"
+regex = "1.5.4"
+reqwest = { version = "0.11", default-features = false, features = ["blocking", "cookies", "rustls-tls"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_urlencoded = "0.7.1"
+serde_json = { version = "1.0", features = ["preserve_order"] }
+# serde_yaml = "0.8"
+termcolor = "1.1.2"
+termcolor-json = "1.0.0"
+termsize = "0.1"
+url = "2.2.2"
+# wild = { version = "2.0", optional = true }
+
+[features]
+screencast = []
