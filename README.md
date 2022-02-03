@@ -112,4 +112,4 @@ Some benchmarks have been carried out. But before publishing anything they've be
 
 # Contributing
 
-If you are interested in contributing to the ```rURL``` project, please take a look at the [contributing guide](doc/contributing.md). If you'd like to request a feature or report a bug, please create a [GitHub issue](/twigly/rurl/issues).
+If you are interested in contributing to the ```rURL``` project, please take a look at the [contributing guide](doc/contributing.md). If you'd like to request a feature or report a bug, please create a [GitHub issue](https://github.com/twigly/rurl/issues).
