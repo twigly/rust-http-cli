@@ -12,7 +12,7 @@
 
 # Features
 
-You can already use ```rURL```, some features are not available yet. And new features will come based on your requests (please [file an issue](/twigly/rurl/issues) to do so).
+You can already use ```rURL```, some features are not available yet. And new features will come based on your requests (please [file an issue](https://github.com/twigly/rurl/issues) to do so).
 
 - [X] Simple syntax to be more intuitive
 - [X] Easy file download & upload
@@ -54,7 +54,7 @@ So now, you can reuse this config:
 > rurl mp1-status
 ```
 
-→ [See more about configurations](doc/configuration)
+→ [See more about configurations](doc/configuration.md)
 
 # Examples
 
