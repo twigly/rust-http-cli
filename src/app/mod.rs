@@ -62,7 +62,7 @@ impl App {
                 let mut response = request::execute(&args, req_number, &headers)?;
                 #[cfg(not(feature = "screencast"))]
                 self.busy.clone().done();
-                output::render(&args, req_number, &mut response);
+                output::render(&args, req_number, &mut response)?;
             }
         }
         Ok(())

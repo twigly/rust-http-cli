@@ -4,11 +4,11 @@ mod flags;
 mod headers;
 mod method;
 mod normalizer;
-mod tty;
 mod url;
 
 use crate::core::{Args, Error, Flags, Result};
 use crate::items::Items;
+use crate::terminal::{Terminal, stream};
 use crate::theme::default::DefaultTheme;
 use normalizer::Normalizer;
 use std::cell::RefCell;
@@ -17,7 +17,7 @@ use std::io::{self, Read};
 pub fn execute(args: &[String]) -> Result<Args> {
     validate_raw_args(&args)?;
 
-    let output_redirected = !tty::is_stdout();
+    let output_redirected = !stream::is_stdout();
     let mut normalizer = Normalizer::parse(&args, output_redirected, "http", "localhost")?;
     let method = normalizer.method();
     let flags = normalizer.flags;
@@ -26,7 +26,7 @@ pub fn execute(args: &[String]) -> Result<Args> {
     let urls = normalizer.urls;
     let mut raw = normalizer.raw.take();
 
-    let input_redirected = !tty::is_stdin();
+    let input_redirected = !stream::is_stdin();
     if !is_flag_only_command(&flags) {
         validate_processed_urls(&urls)?;
         validate_processed_items(&items, &raw, input_redirected)?;
@@ -37,6 +37,7 @@ pub fn execute(args: &[String]) -> Result<Args> {
     }
 
     Ok(Args {
+        terminal: RefCell::new(Terminal::new(flags.use_color)),
         method,
         urls,
         output_redirected,

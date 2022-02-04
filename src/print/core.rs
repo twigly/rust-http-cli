@@ -1,9 +1,12 @@
 use std::ops::AddAssign;
 
-pub fn render_newline_if(has_rendered: HasRendered) {
+use crate::core::{Result, Args};
+
+pub fn render_newline_if(args: &Args, has_rendered: HasRendered) -> Result<()> {
     if has_rendered == HasRendered::Something {
-        println!("");
+        args.terminal().message("", true)?;
     }
+    Ok(())
 }
 
 #[derive(Debug, PartialEq, Clone, Copy)]

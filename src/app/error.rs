@@ -1,8 +1,14 @@
 use super::Error;
+use crate::terminal::{stream, Terminal};
 use std::fmt;
 
 pub fn show(err: &Error) {
-    eprintln!("error: {}", err);
+    let output_redirected = !stream::is_stdout();
+    let res = Terminal::new(!output_redirected).error_with_message(err);
+    match res {
+        Ok(_) => {}
+        Err(err) => println!("{}", err),
+    }
 }
 
 impl fmt::Display for Error {
@@ -33,6 +39,7 @@ impl fmt::Display for Error {
             Error::BadHeaderValue(_) => write!(f, "invalid header value."),
             Error::Request(err) => write!(f, "{}", err),
             Error::Io(err) => write!(f, "{}", err),
+            Error::Terminal => write!(f, "can't print in the terminal"),
         }
     }
 }

@@ -1,13 +1,13 @@
 [package]
-name = "rurl"
-version = "0.1.3"
+name = "rh"
+version = "0.1.4"
 edition = "2021"
 authors = ["twigly"]
 license = "MIT"
 description = "A user-friendly command-line tool to request HTTP APis"
 readme = "README.md"
-homepage = "https://github.com/twigly/rurl"
-repository = "https://github.com/twigly/rurl"
+homepage = "https://github.com/twigly/rh"
+repository = "https://github.com/twigly/rh"
 keywords = ["cli", "http", "terminal", "tool", "devops"]
 categories = ["command-line-utilities"]
 
