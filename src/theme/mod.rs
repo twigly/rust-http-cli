@@ -17,6 +17,7 @@ pub trait RequestTheme: HeaderTheme {
     fn as_header(&self) -> &dyn HeaderTheme;
     fn primary(&self) -> Style;
     fn secondary(&self) -> Style;
+    fn method(&self) -> Style;
     fn url(&self) -> Style;
     fn direction(&self, standard: bool) -> Style;
 }

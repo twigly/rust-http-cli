@@ -1,60 +1,96 @@
-pub(crate) mod form;
-pub(crate) mod json;
+mod core;
+pub(crate) mod form; // FIXME Old version
+pub(crate) mod json; // FIXME Old version
+pub(crate) mod stream;
 mod theme;
 
 use crate::theme::style::{Color, Style};
-use std::io::Write;
-use termcolor::{Color as TermColor, ColorChoice, ColorSpec, StandardStream, WriteColor};
+use std::cell::RefMut;
+use std::io::prelude::*;
+use std::{cell::RefCell, fmt};
+use termcolor::{self, ColorSpec, StandardStream, WriteColor};
 
-macro_rules! print_and_something {
-    ($style:expr, $buffer:expr, $something:expr) => {
-        let mut stdout = stdout(&$style);
-        let _ = stdout.write($buffer.as_bytes());
-        let _ = stdout.write($something);
-        let _ = stdout.reset();
-    };
+pub enum TerminalError {
+    Io,
 }
 
-pub fn print(style: &Style, buffer: &str) {
-    let mut stdout = stdout(&style);
-    let _ = stdout.write(buffer.as_bytes());
-    let _ = stdout.reset();
-}
-
-pub fn print_and_space(style: &Style, buffer: &str) {
-    print_and_something!(&style, buffer, b" ");
-}
-
-pub fn println(style: &Style, buffer: &str) {
-    print_and_something!(&style, buffer, b"\n");
-}
-
-fn stdout(style: &Style) -> StandardStream {
-    let mut stdout = StandardStream::stdout(ColorChoice::AlwaysAnsi);
-    match style.forecolor {
-        Some(color) => {
-            let _ = stdout.set_color(
-                ColorSpec::new()
-                    .set_fg(Some(TermColor::from(color)))
-                    .set_bold(style.is_bold),
-            );
-        }
-        _ => {}
+impl fmt::Display for TerminalError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Can't write in the terminal")
     }
-    stdout
 }
 
-impl From<Color> for TermColor {
-    fn from(color: Color) -> TermColor {
-        match color {
-            Color::Black => TermColor::Black,
-            Color::Red => TermColor::Red,
-            Color::Green => TermColor::Green,
-            Color::Yellow => TermColor::Yellow,
-            Color::Blue => TermColor::Blue,
-            Color::Purple => TermColor::Magenta,
-            Color::Cyan => TermColor::Cyan,
-            Color::White => TermColor::White,
+pub type Result<T> = std::result::Result<T, TerminalError>;
+
+pub struct Terminal {
+    stdout: RefCell<StandardStream>,
+    stderr: RefCell<StandardStream>,
+}
+
+#[cfg(test)]
+impl fmt::Debug for Terminal {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Terminal").finish()
+    }
+}
+
+impl Terminal {
+    pub fn new(use_color: bool) -> Terminal {
+        let color_choice = if use_color {
+            termcolor::ColorChoice::AlwaysAnsi
+        } else {
+            termcolor::ColorChoice::Never
+        };
+
+        Terminal {
+            stdout: RefCell::new(StandardStream::stdout(color_choice)),
+            stderr: RefCell::new(StandardStream::stderr(color_choice)),
         }
+    }
+
+    pub fn error_with_message<T: fmt::Display>(&self, message: T) -> Result<()> {
+        let mut stderr = self.stderr.borrow_mut();
+        let style = Color::Red.bold();
+        self.write_with_style(&mut stderr, &style, "error: ")?;
+        writeln!(stderr, "{}", message)?;
+        Ok(())
+    }
+
+    pub fn message_with_style<T: fmt::Display>(&mut self, style: &Style, message: T) -> Result<()> {
+        self.write_with_style(&mut self.stdout.borrow_mut(), &style, message)
+    }
+
+    pub fn message<T: fmt::Display>(&self, message: T, newline: bool) -> Result<()> {
+        let mut stdout = self.stdout.borrow_mut();
+        write!(stdout, "{}", message)?;
+        if newline {
+            stdout.write(b"\n")?;
+        }
+        Ok(())
+    }
+
+    fn write_with_style<T: fmt::Display>(
+        &self,
+        stream: &mut RefMut<StandardStream>,
+        style: &Style,
+        message: T,
+    ) -> Result<()> {
+        stream.set_color(
+            ColorSpec::new()
+                .set_bold(style.is_bold)
+                .set_fg(style.forecolor.map(From::from)),
+        )?;
+        write!(stream, "{}", message)?;
+        if style.newline {
+            stream.write(b"\n")?;
+        }
+        stream.reset()?;
+        Ok(())
+    }
+}
+
+impl From<std::io::Error> for TerminalError {
+    fn from(_: std::io::Error) -> TerminalError {
+        TerminalError::Io
     }
 }

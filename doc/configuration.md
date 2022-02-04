@@ -4,42 +4,42 @@ Feature not available yet.
 
 ## How to configure?
 
-You can change ```rURL``` default values and create new configs you can reuse easily.
+You can change ```rh``` default values and create new configs you can reuse easily.
 
 To see a configuration, the syntax is:
 
 ```bash
-> rurl config [config-name]
+> rh config [config-name]
 ```
 
 To update a configuration, the syntax is:
 
 ```bash
-> rurl config [config-name] [options]
+> rh config [config-name] [options]
 ```
 
 Please note that ```config-name``` is optional. If not specified it's ```default```. ```config-name``` must be lower-case.
 
-```options``` can be any ```rURL``` options.
+```options``` can be any ```rh``` options.
 
 ## Default config
 
 The ```default``` config is used if no config is specified. For example, if you want to show the response headers (```--header``` or ```-h```):
 
 ```bash
-> rurl config -h
+> rh config -h
 ```
 
 You can select multiple options at the same time:
 
 ```bash
-> rurl config --header --compact
+> rh config --header --compact
 ```
 
 Or the same but shorter:
 
 ```bash
-> rurl config -hc
+> rh config -hc
 ```
 
 ## Custom config
@@ -47,7 +47,7 @@ Or the same but shorter:
 You can create a config to show the ```-u```RL and method + to show the response ```-h```eaders + to show a ```-c```ompact response:
 
 ```bash
-> rurl config my-config -uhc
+> rh config my-config -uhc
 ```
 
 ## How to use a config
@@ -55,12 +55,12 @@ You can create a config to show the ```-u```RL and method + to show the response
 You can use the "my-config" config to show the URL, method, response headers, and compact the response body:
 
 ```bash
-> rurl my-config https://pie.dev/image/jpeg
+> rh my-config https://pie.dev/image/jpeg
 ```
 
 ## Default config options
 
-The config feature is not available yet. Once available, new options will be available in ```rURL``` in order for the config to be more flexible:
+The config feature is not available yet. Once available, new options will be available in ```rh``` in order for the config to be more flexible:
 
 ```
 --hostname=localhost

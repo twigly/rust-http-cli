@@ -9,19 +9,19 @@ Binaries are available here ...
 ## MacOS
 
 ```bash
-> brew install rurl
+> brew install rh
 ```
 
 ## Ubuntu
 
 ```bash
-> sudo apt install rurl
+> sudo apt install rh
 ```
 
 ## Cargo
 
 ```bash
-> cargo install rurl
+> cargo install rh
 ```
 
 ## More platforms

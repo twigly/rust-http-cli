@@ -11,7 +11,7 @@ Items are a list of key/value. Each key/value is specified as ```key=value```.
 If you want to force a number to be as a string, you can use ```/=``` instead of ```=```
 
 ```bash
-> rurl httpbin.org/post number1=123 number2/=456 text=hello
+> rh httpbin.org/post number1=123 number2/=456 text=hello
 ```
 
 The JSON object will be:
@@ -29,7 +29,7 @@ The JSON object will be:
 If you want to force a boolean to be as a string, you can use ```/=``` instead of ```=```
 
 ```bash
-> rurl httpbin.org/post b1=true b2=false b3=y b4=n b5/=true b6/=false b7/=y b8/=n
+> rh httpbin.org/post b1=true b2=false b3=y b4=n b5/=true b6/=false b7/=y b8/=n
 ```
 
 The JSON object will be:

@@ -67,7 +67,6 @@ impl Flags {
             "-h" | "--header" => self.show_response_headers = true,
             "-B" | "--req-body" => self.show_request_body = true,
             "-b" | "--body" => self.show_response_body = true,
-            "-b=n" | "--body=n" => self.show_response_body = false,
             "-C" | "--req-compact" => self.show_request_compact = true,
             "-c" | "--compact" => self.show_response_compact = true,
             _ => {
@@ -81,6 +80,7 @@ impl Flags {
     }
 
     fn extract_compact_flags(&mut self, flag: &str) -> bool {
+        // FIXME Need something like "-no-bBH..." to set the related flags to false
         let valid = Regex::new(r"^\-[cCdushHbB]*$").unwrap().is_match(flag);
         if valid {
             if flag.contains("c") {

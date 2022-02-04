@@ -1,9 +1,9 @@
 use crate::items::Items;
 use crate::request::Method;
+use crate::terminal::Terminal;
 use crate::theme::Theme;
 use reqwest;
-use std::cell::RefCell;
-use std::env;
+use std::cell::{RefCell, RefMut};
 
 #[cfg_attr(test, derive(Debug, PartialEq))]
 pub enum Mode {
@@ -14,11 +14,12 @@ pub enum Mode {
 
 #[cfg_attr(test, derive(Debug))]
 pub struct Args {
+    pub terminal: RefCell<Terminal>, // FIXME Create a crate for terminal
     pub method: Method,
     pub urls: Vec<String>,
     pub output_redirected: bool,
     pub terminal_columns: u16,
-    pub theme: Box<dyn Theme>,
+    pub theme: Box<dyn Theme>, // FIXME Create a crate for theme
     pub flags: Flags,
     pub headers: RefCell<HeaderMap>,
     pub items: RefCell<Items>,
@@ -26,13 +27,6 @@ pub struct Args {
 }
 
 impl Args {
-    pub fn user_command(&self) -> String {
-        env::args()
-            .fold(String::new(), |s, arg| s + &arg + " ")
-            .trim_end()
-            .to_string()
-    }
-
     pub fn mode(&self) -> Mode {
         if self.flags.show_help {
             Mode::Help
@@ -41,6 +35,10 @@ impl Args {
         } else {
             Mode::Run
         }
+    }
+
+    pub fn terminal(&self) -> RefMut<'_, Terminal> {
+        self.terminal.borrow_mut()
     }
 }
 
@@ -105,6 +103,7 @@ pub enum Error {
     BadHeaderValue(String),
     Request(String),
     Io(String),
+    Terminal,
 }
 
 pub type Result<T> = std::result::Result<T, Error>;
@@ -115,16 +114,17 @@ pub trait PushItem {
 
 #[cfg(test)]
 mod tests {
-    use super::{ArgItems, Args, Flags, HeaderMap, Method, Mode, PushItem};
+    use super::{ArgItems, Args, Flags, HeaderMap, Method, Mode, PushItem, Terminal};
 
     mod args {
-        use super::{ArgItems, Args, Flags, HeaderMap, Method, Mode, PushItem};
+        use super::{ArgItems, Args, Flags, HeaderMap, Method, Mode, PushItem, Terminal};
         use crate::{items::Items, theme::default::DefaultTheme};
         use std::cell::RefCell;
 
         #[test]
         fn json_flag() {
             let args = Args {
+                terminal: RefCell::new(Terminal::new(false)),
                 method: Method::GET,
                 urls: Vec::new(),
                 output_redirected: false,
@@ -149,6 +149,7 @@ mod tests {
             let mut items = Items::new();
             let _ = items.push("key=value");
             let args = Args {
+                terminal: RefCell::new(Terminal::new(false)),
                 method: Method::GET,
                 urls: Vec::new(),
                 output_redirected: false,
@@ -171,6 +172,7 @@ mod tests {
         #[test]
         fn form_flag() {
             let args = Args {
+                terminal: RefCell::new(Terminal::new(false)),
                 method: Method::GET,
                 urls: Vec::new(),
                 output_redirected: false,
@@ -193,6 +195,7 @@ mod tests {
         #[test]
         fn version() {
             let args = Args {
+                terminal: RefCell::new(Terminal::new(false)),
                 method: Method::GET,
                 urls: Vec::new(),
                 output_redirected: false,
@@ -212,6 +215,7 @@ mod tests {
         #[test]
         fn help() {
             let args = Args {
+                terminal: RefCell::new(Terminal::new(false)),
                 method: Method::GET,
                 urls: Vec::new(),
                 output_redirected: false,

@@ -9,12 +9,12 @@ macro_rules! newline {
 macro_rules! logo {
     () => {
         println!(
-            "╱╱╭╮╱╭┳━━━┳╮
-╱╱┃┃╱┃┃╭━╮┃┃
-╭━┫┃╱┃┃╰━╯┃┃
-┃╭┫┃╱┃┃╭╮╭┫┃╱╭╮
-┃┃┃╰━╯┃┃┃╰┫╰━╯┃
-╰╯╰━━━┻╯╰━┻━━━╯"
+            "╱╱╭╮
+╱╱┃┃
+╭━┫╰━╮
+┃╭┫╭╮┃
+┃┃┃┃┃┃
+╰╯╰╯╰╯"
         )
     };
 }
@@ -139,7 +139,7 @@ macro_rules! body {
 
 macro_rules! thanks {
     () => {
-        println!("Thanks for using rURL!")
+        println!("Thanks for using {}!", env!("CARGO_PKG_NAME"))
     };
 }
 

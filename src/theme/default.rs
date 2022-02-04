@@ -21,8 +21,11 @@ impl RequestTheme for DefaultRequestTheme {
     fn secondary(&self) -> Style {
         Color::Purple.normal()
     }
+    fn method(&self) -> Style {
+        Color::Purple.bold()
+    }
     fn url(&self) -> Style {
-        Color::Purple.normal()
+        Color::Purple.normal_newline()
     }
     fn direction(&self, standard: bool) -> Style {
         crate::ifelse!(standard, self.primary(), self.secondary())
@@ -33,7 +36,7 @@ impl HeaderTheme for DefaultRequestTheme {
         crate::ifelse!(standard, self.primary(), self.secondary())
     }
     fn header_value(&self, _: bool) -> Style {
-        Style::default()
+        Style::newline()
     }
 }
 
@@ -51,7 +54,7 @@ impl ResponseTheme for DefaultReponseTheme {
         Color::Green.normal()
     }
     fn status(&self) -> Style {
-        Color::Green.bold()
+        Color::Green.bold_newline()
     }
     fn direction(&self, standard: bool) -> Style {
         crate::ifelse!(standard, self.primary(), self.secondary())
@@ -62,7 +65,7 @@ impl HeaderTheme for DefaultReponseTheme {
         crate::ifelse!(standard, self.primary(), self.secondary())
     }
     fn header_value(&self, _: bool) -> Style {
-        Style::default()
+        Style::newline()
     }
 }
 

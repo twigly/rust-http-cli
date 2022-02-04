@@ -23,13 +23,13 @@ Everything that improves performance is welcome.
 
 # Benchmark
 
-- [ ] Comparison between cURL and rURL
+- [ ] Comparison between ```cURL``` and ```rh```
 
 # Refactoring
 
 - [ ] Would it make sense to use ```hyper``` directly instead of ```reqwest```? Reasons would be:
    - smaller dependency
-   - maybe a speed gain having code only specific to ```rURL```
+   - maybe a speed gain having code only specific to ```rh```
    - there is no ```Client```, ```Request``` and ```Response``` traits in reqwest which is a problem for unit tests
 
 # Features
@@ -56,5 +56,5 @@ Everything that improves performance is welcome.
 
 # Performance
 
-- [ ] ```rURL``` speed performance is very good but it would be nice to review the code and try to optimise
+- [ ] ```rh``` speed performance is very good but it would be nice to review the code and try to optimise
 - [ ] the current binary size is acceptable but there are certainly ways to decrease it (without sacrificing performance)
