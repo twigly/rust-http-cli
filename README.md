@@ -102,10 +102,6 @@ You can download a file and save it:
 
 → [More examples](doc/examples.md)
 
-# Benchmarks
-
-Some benchmarks have been carried out. But before publishing anything they've been reviewed since the aim is to be accurate and not misleading.
-
 # License
 
 ```rh``` is distributed under the terms of the MIT license. See [LICENSE](/LICENSE) for details.
