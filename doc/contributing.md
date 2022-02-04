@@ -1,12 +1,12 @@
 # Contributing
 
-Thanks for considering helping the ```rh``` project.  There are many ways you can help: using ```rh``` and [reporting bugs](/twigly/rh/issues), making additions and improvements to ```rh```, documentation, logo, package manager...
+Thanks for considering helping the ```rh``` project.  There are many ways you can help: using ```rh``` and [reporting bugs](https://github.com/twigly/rh/issues), making additions and improvements to ```rh```, documentation, logo, package manager...
 
 ## Reporting bugs
 
-Please file a [GitHub issue](/twigly/rh/issues).  Include as much information as possible.
+Please file a [GitHub issue](https://github.com/twigly/rh/issues).  Include as much information as possible.
 
-Feel free to file [GitHub issues](/twigly/rh/issues) to get help, or ask a question.
+Feel free to file [GitHub issues](https://github.com/twigly/rh/issues) to get help, or ask a question.
 
 ## Code changes
 
