@@ -10,7 +10,7 @@ mod terminal;
 #[cfg(test)]
 mod test;
 mod theme;
-mod util;
+mod macros;
 
 use crate::app::App;
 use std::env;

@@ -1,4 +1,5 @@
 use crate::core::{ArgItems, Args};
+use crate::{rh_homepage, rh_name, rh_version};
 use reqwest::header::{HeaderMap, HeaderValue};
 
 use super::header;
@@ -30,9 +31,9 @@ pub fn upgrade(args: &Args, headers: &mut HeaderMap) {
             header::USER_AGENT,
             HeaderValue::from_str(&format!(
                 "{}/{} {}",
-                env!("CARGO_PKG_NAME"),
-                env!("CARGO_PKG_VERSION"),
-                env!("CARGO_PKG_HOMEPAGE"),
+                rh_name!(),
+                rh_version!(),
+                rh_homepage!(),
             ))
             .unwrap(),
         );

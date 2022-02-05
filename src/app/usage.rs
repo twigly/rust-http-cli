@@ -1,4 +1,5 @@
 const LONG_FLAG_WIDTH: usize = 15;
+use crate::rh_name;
 
 macro_rules! newline {
     () => {
@@ -139,7 +140,7 @@ macro_rules! body {
 
 macro_rules! thanks {
     () => {
-        println!("Thanks for using {}!", env!("CARGO_PKG_NAME"))
+        println!("Thanks for using {}!", rh_name!())
     };
 }
 
@@ -150,10 +151,10 @@ pub fn help() {
     println!("USAGE:");
     println!(
         "  {} [METHOD] url [options] [headers] [payload]",
-        env!("CARGO_PKG_NAME")
+        rh_name!()
     );
-    println!("  {} --help", env!("CARGO_PKG_NAME"));
-    println!("  {} --version", env!("CARGO_PKG_NAME"));
+    println!("  {} --help", rh_name!());
+    println!("  {} --version", rh_name!());
 
     newline!();
     options!();

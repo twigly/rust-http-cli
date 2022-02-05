@@ -1,8 +1,8 @@
 use super::direction;
 use super::HasRendered;
-use crate::core::Args;
-use crate::core::Result;
+use crate::core::{Args, Result};
 use crate::request::Response;
+use crate::rh_name;
 use crate::terminal;
 use content_inspector::inspect;
 use std::borrow::Borrow;
@@ -51,7 +51,7 @@ fn print_binary_usage(args: &Args, size: usize) -> Result<()> {
     let message = format!(
         "Binary data not shown in terminal\nContent size {}b\nTo copy the content in a file, you should try:\n{} > filename", 
         size,
-        env!("CARGO_PKG_NAME")
+        rh_name!()
     );
     args.terminal().message(message, true)?;
     Ok(())
