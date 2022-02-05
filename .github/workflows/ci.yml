@@ -17,8 +17,26 @@ jobs:
     - name: Run Clippy
       run: cargo clippy -- -D warnings
 
-  test-ubuntu:
+  test-ubuntu-x64:
     runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: cargo build --verbose
+    - name: Run tests
+      run: cargo test --verbose
+
+  test-macos-x64:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: cargo build --verbose
+    - name: Run tests
+      run: cargo test --verbose
+
+  test-windows-x64:
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
     - name: Build
