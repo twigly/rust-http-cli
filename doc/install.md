@@ -1,12 +1,14 @@
 # Install
 
-Not available yet.
+## Cargo
 
-## Binaries
-
-Binaries are available here ...
+```bash
+> cargo install rh
+```
 
 ## MacOS
+
+Not available yet.
 
 ```bash
 > brew install rh
@@ -14,14 +16,10 @@ Binaries are available here ...
 
 ## Ubuntu
 
+Not available yet.
+
 ```bash
 > sudo apt install rh
-```
-
-## Cargo
-
-```bash
-> cargo install rh
 ```
 
 ## More platforms

@@ -4,7 +4,7 @@ People are welcome to help on any of the following tasks for example.
 
 Everything that improves performance is welcome.
 
-# Package manager
+## Package manager
 
 - [ ] Homebrew (Mac)
 - [ ] MacPorts (Mac)
@@ -21,18 +21,18 @@ Everything that improves performance is welcome.
 - [ ] Chocolatey (Windows)
 - [ ] Others...
 
-# Benchmark
+## Benchmark
 
 - [ ] Comparison between ```cURL``` and ```rh```
 
-# Refactoring
+## Refactoring
 
 - [ ] Would it make sense to use ```hyper``` directly instead of ```reqwest```? Reasons would be:
    - smaller dependency
    - maybe a speed gain having code only specific to ```rh```
    - there is no ```Client```, ```Request``` and ```Response``` traits in reqwest which is a problem for unit tests
 
-# Features
+## Features
 
 - [ ] Config system so it's possible to change the default values and create shortcuts [see configuration](configuration.md)
 - [ ] More options with SSL
@@ -54,7 +54,7 @@ Everything that improves performance is welcome.
 - [ ] Specify cookies without using the ```cookies``` header (and avoid using ```"``` to escape the ```;``` separator) - maybe not worth (low priority)
 - [ ] Completion on available platforms
 
-# Performance
+## Performance
 
-- [ ] ```rh``` speed performance is very good but it would be nice to review the code and try to optimise
+- [ ] ```rh``` performance is very good but it would be nice to review the code and try to optimise
 - [ ] the current binary size is acceptable but there are certainly ways to decrease it (without sacrificing performance)
