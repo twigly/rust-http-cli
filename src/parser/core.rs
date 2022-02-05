@@ -15,21 +15,21 @@ impl ArgDetection for String {
         self.starts_with(RAW_FLAG)
     }
     fn is_flag(&self) -> bool {
-        self.starts_with("-")
+        self.starts_with('-')
     }
     fn is_header(&self) -> bool {
-        match self.chars().nth(0) {
+        match self.chars().next() {
             Some(first_char) => {
-                first_char.is_ascii_alphanumeric() && self.contains(":") && !self.contains("=")
+                first_char.is_ascii_alphanumeric() && self.contains(':') && !self.contains('=')
             }
             None => false,
         }
     }
     fn is_item(&self) -> bool {
-        !self.starts_with("=")
-            && !self.starts_with("/")
-            && !self.starts_with(":")
-            && self.contains("=")
+        !self.starts_with('=')
+            && !self.starts_with('/')
+            && !self.starts_with(':')
+            && self.contains('=')
     }
 
     fn is_likely_url(&self) -> bool {
@@ -39,8 +39,8 @@ impl ArgDetection for String {
         // FIXME Add IPv6 and IPv4 detection
         self.starts_with("http://")
             || self.starts_with("https://")
-            || self.starts_with(":")
-            || self.starts_with("/")
+            || self.starts_with(':')
+            || self.starts_with('/')
     }
 }
 

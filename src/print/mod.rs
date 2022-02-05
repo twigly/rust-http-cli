@@ -14,14 +14,14 @@ pub fn render(args: &Args, req_number: u8, response: &mut Response) -> Result<()
 
     has_rendered += request::render_method_and_url(args, req_number)?;
     has_rendered += headers::render_request(args, &args.headers.borrow(), true)?;
-    core::render_newline_if(args,has_rendered)?;
+    core::render_newline_if(args, has_rendered)?;
     has_rendered = request::render_body(args)?;
-    core::render_newline_if(args,has_rendered)?;
+    core::render_newline_if(args, has_rendered)?;
 
     let mut has_rendered = HasRendered::Nothing;
     has_rendered += response::render_status(args, response)?;
     has_rendered += headers::render_response(args, response.headers(), false)?;
-    core::render_newline_if(args,has_rendered)?;
+    core::render_newline_if(args, has_rendered)?;
 
     response::render_body(args, response)?;
 

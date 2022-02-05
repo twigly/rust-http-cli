@@ -1,6 +1,6 @@
 use std::ops::AddAssign;
 
-use crate::core::{Result, Args};
+use crate::core::{Args, Result};
 
 pub fn render_newline_if(args: &Args, has_rendered: HasRendered) -> Result<()> {
     if has_rendered == HasRendered::Something {

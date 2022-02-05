@@ -25,7 +25,7 @@ pub fn normalize(url: &str, default_scheme: &str, default_host: &str) -> String 
             format!("{}://{}{}", default_scheme, default_host, part)
         }
         _ => {
-            if url.starts_with("/") {
+            if url.starts_with('/') {
                 format!("{}://{}/{}", default_scheme, default_host, url)
             } else {
                 format!("{}://{}", default_scheme, url)

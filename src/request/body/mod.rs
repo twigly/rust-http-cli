@@ -10,7 +10,7 @@ pub trait Body {
 
 impl Body for RequestBuilder {
     fn body_if_items(self, args: &Args) -> RequestBuilder {
-        match build_body(&args) {
+        match build_body(args) {
             Some(body) => self.body(body),
             None => self,
         }
@@ -24,9 +24,7 @@ fn build_body(args: &Args) -> Option<String> {
         } else {
             Some(form::serialize(&args.items.borrow()).unwrap())
         }
-    } else if let Some(ref raw) = args.raw {
-        Some(raw.clone())
     } else {
-        None
+        args.raw.as_ref().cloned()
     }
 }

@@ -8,17 +8,17 @@ mod url;
 
 use crate::core::{Args, Error, Flags, Result};
 use crate::items::Items;
-use crate::terminal::{Terminal, stream};
+use crate::terminal::{stream, Terminal};
 use crate::theme::default::DefaultTheme;
 use normalizer::Normalizer;
 use std::cell::RefCell;
 use std::io::{self, Read};
 
 pub fn execute(args: &[String]) -> Result<Args> {
-    validate_raw_args(&args)?;
+    validate_raw_args(args)?;
 
     let output_redirected = !stream::is_stdout();
-    let mut normalizer = Normalizer::parse(&args, output_redirected, "http", "localhost")?;
+    let mut normalizer = Normalizer::parse(args, output_redirected, "http", "localhost")?;
     let method = normalizer.method();
     let flags = normalizer.flags;
     let headers = normalizer.headers;
@@ -69,7 +69,7 @@ fn validate_raw_args(args: &[String]) -> Result<()> {
 
 #[inline]
 fn validate_processed_urls(urls: &[String]) -> Result<()> {
-    if urls.len() == 0 {
+    if urls.is_empty() {
         Err(Error::MissingUrl)
     } else {
         Ok(())
@@ -82,7 +82,7 @@ fn validate_processed_items(
     raw: &Option<String>,
     input_redirected: bool,
 ) -> Result<()> {
-    if (items.len() > 0) as u8 + raw.is_some() as u8 + input_redirected as u8 > 1 {
+    if (!items.is_empty()) as u8 + raw.is_some() as u8 + input_redirected as u8 > 1 {
         Err(Error::ItemsAndRawMix)
     } else {
         Ok(())

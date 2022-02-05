@@ -83,31 +83,31 @@ impl Flags {
         // FIXME Need something like "-no-bBH..." to set the related flags to false
         let valid = Regex::new(r"^\-[cCdushHbB]*$").unwrap().is_match(flag);
         if valid {
-            if flag.contains("c") {
+            if flag.contains('c') {
                 self.show_response_compact = true;
             }
-            if flag.contains("C") {
+            if flag.contains('C') {
                 self.show_request_compact = true;
             }
-            if flag.contains("d") {
+            if flag.contains('d') {
                 self.show_direction = true;
             }
-            if flag.contains("u") {
+            if flag.contains('u') {
                 self.show_request_url = true;
             }
-            if flag.contains("s") {
+            if flag.contains('s') {
                 self.show_response_status = true;
             }
-            if flag.contains("H") {
+            if flag.contains('H') {
                 self.show_request_headers = true;
             }
-            if flag.contains("h") {
+            if flag.contains('h') {
                 self.show_response_headers = true;
             }
-            if flag.contains("b") {
+            if flag.contains('b') {
                 self.show_response_body = true;
             }
-            if flag.contains("B") {
+            if flag.contains('B') {
                 self.show_request_body = true;
             }
         }

@@ -18,13 +18,11 @@ pub fn upgrade(args: &Args, headers: &mut HeaderMap) {
             );
         }
     }
-    if args.is_form() {
-        if !headers.contains_key(header::CONTENT_TYPE) {
-            headers.append(
-                header::CONTENT_TYPE,
-                HeaderValue::from_str("application/x-www-form-urlencoded").unwrap(),
-            );
-        }
+    if args.is_form() && !headers.contains_key(header::CONTENT_TYPE) {
+        headers.append(
+            header::CONTENT_TYPE,
+            HeaderValue::from_str("application/x-www-form-urlencoded").unwrap(),
+        );
     }
 
     if !headers.contains_key(header::USER_AGENT) {

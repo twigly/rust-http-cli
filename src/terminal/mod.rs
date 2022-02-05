@@ -57,14 +57,14 @@ impl Terminal {
     }
 
     pub fn message_with_style<T: fmt::Display>(&mut self, style: &Style, message: T) -> Result<()> {
-        self.write_with_style(&mut self.stdout.borrow_mut(), &style, message)
+        self.write_with_style(&mut self.stdout.borrow_mut(), style, message)
     }
 
     pub fn message<T: fmt::Display>(&self, message: T, newline: bool) -> Result<()> {
         let mut stdout = self.stdout.borrow_mut();
         write!(stdout, "{}", message)?;
         if newline {
-            stdout.write(b"\n")?;
+            stdout.write_all(b"\n")?;
         }
         Ok(())
     }
@@ -82,7 +82,7 @@ impl Terminal {
         )?;
         write!(stream, "{}", message)?;
         if style.newline {
-            stream.write(b"\n")?;
+            stream.write_all(b"\n")?;
         }
         stream.reset()?;
         Ok(())

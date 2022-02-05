@@ -2,7 +2,6 @@ use crate::items::Items;
 use crate::request::Method;
 use crate::terminal::Terminal;
 use crate::theme::Theme;
-use reqwest;
 use std::cell::{RefCell, RefMut};
 
 #[cfg_attr(test, derive(Debug, PartialEq))]

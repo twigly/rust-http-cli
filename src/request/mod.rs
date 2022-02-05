@@ -18,7 +18,7 @@ pub trait Request {
 
 pub fn execute(args: &Args, req_number: u8, headers: &HeaderMap) -> Result<Response> {
     let client = blocking::Client::new();
-    execute_request(&args, req_number, headers, client)
+    execute_request(args, req_number, headers, client)
 }
 
 fn execute_request(
@@ -33,7 +33,7 @@ fn execute_request(
     let response = builder
         .request(method, url)
         .headers(headers.clone())
-        .body_if_items(&args)
+        .body_if_items(args)
         .send()?;
 
     Ok(response)

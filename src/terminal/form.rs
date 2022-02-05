@@ -1,5 +1,4 @@
 use crate::items::Items;
-use serde_urlencoded;
 
 pub fn println(items: &Items, _compact: bool) {
     match serde_urlencoded::to_string(&items) {

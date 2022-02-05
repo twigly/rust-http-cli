@@ -7,12 +7,12 @@ use reqwest::header::HeaderMap;
 
 pub fn render_request(args: &Args, map: &HeaderMap, request_dir: bool) -> Result<HasRendered> {
     let flags = &args.flags;
-    render(flags.show_request_headers, &args, &map, request_dir)
+    render(flags.show_request_headers, args, map, request_dir)
 }
 
 pub fn render_response(args: &Args, map: &HeaderMap, request_dir: bool) -> Result<HasRendered> {
     let flags = &args.flags;
-    render(flags.show_response_headers, &args, &map, request_dir)
+    render(flags.show_response_headers, args, map, request_dir)
 }
 
 fn render(
@@ -35,7 +35,7 @@ fn render(
             let is_standard = key.is_standard();
             let key = key.as_str();
 
-            direction::render_with_standard_option(&args, request_dir, is_standard)?;
+            direction::render_with_standard_option(args, request_dir, is_standard)?;
 
             args.terminal()
                 .message_with_style(&theme.header_name(is_standard), format!("{}: ", key))?;
