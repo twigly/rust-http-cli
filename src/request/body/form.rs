@@ -1,4 +1,3 @@
-use serde_urlencoded;
 use serde_urlencoded::ser::Error;
 
 use crate::items::Items;

@@ -40,7 +40,7 @@ impl App {
     }
 
     pub fn run(&self, args: &[String]) -> Result<(), Error> {
-        let args = parser::execute(&args)?;
+        let args = parser::execute(args)?;
         match args.mode() {
             Mode::Help => {
                 #[cfg(not(feature = "screencast"))]

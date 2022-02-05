@@ -1,7 +1,7 @@
 use crate::core::{Args, Result};
 
 pub fn render(args: &Args, request_dir: bool) -> Result<()> {
-    render_with_standard_option(&args, request_dir, true)
+    render_with_standard_option(args, request_dir, true)
 }
 
 pub fn render_with_standard_option(args: &Args, request_dir: bool, standard: bool) -> Result<()> {

@@ -32,11 +32,9 @@ impl Normalizer {
         let mut raw: Option<String> = None;
         let args_length = args.len();
 
-        for arg_index in 0..args_length {
-            let arg = args[arg_index].clone();
-
+        for (arg_index, arg) in args.iter().enumerate().take(args_length) {
             if arg_index == 0 {
-                method = method::from_str(&arg);
+                method = method::from_str(arg);
                 if method.is_some() {
                     continue;
                 }
@@ -44,11 +42,11 @@ impl Normalizer {
 
             if (method.is_some() && arg_index == 1) || (method.is_none() && arg_index == 0) {
                 if arg.is_likely_url() {
-                    urls.push(arg);
+                    urls.push(arg.clone());
                     continue;
                 }
             } else if arg.is_url() {
-                urls.push(arg);
+                urls.push(arg.clone());
                 continue;
             }
 
@@ -57,21 +55,17 @@ impl Normalizer {
                 if raw.is_some() {
                     return Err(Error::TooManyRaw);
                 }
-                if raw_data.len() > 0 {
+                if !raw_data.is_empty() {
                     raw = Some(raw_data);
                 }
             } else if arg.is_flag() {
-                flags.push(&arg)?;
-            } else {
-                if arg.is_header() {
-                    headers.push(&arg)?;
-                } else if arg.is_item() {
-                    items.push(&arg)?;
-                } else {
-                    if method.is_none() {
-                        return Err(Error::Unexpected(arg));
-                    }
-                }
+                flags.push(arg)?;
+            } else if arg.is_header() {
+                headers.push(arg)?;
+            } else if arg.is_item() {
+                items.push(arg)?;
+            } else if method.is_none() {
+                return Err(Error::Unexpected(arg.clone()));
             }
 
             if flags.show_version || flags.show_help {
@@ -83,7 +77,7 @@ impl Normalizer {
             flags.http = true;
         }
 
-        if urls.len() > 0 {
+        if !urls.is_empty() {
             let scheme = if flags.https {
                 "https"
             } else if flags.http {
@@ -92,7 +86,7 @@ impl Normalizer {
                 default_scheme
             };
             for url in urls.iter_mut() {
-                *url = url::normalize(&url, scheme, default_host);
+                *url = url::normalize(url, scheme, default_host);
             }
         }
 
@@ -121,7 +115,7 @@ impl Normalizer {
     }
 
     pub fn has_input_data(&self) -> bool {
-        self.items.len() > 0 || self.raw.is_some()
+        !self.items.is_empty() || self.raw.is_some()
     }
 }
 

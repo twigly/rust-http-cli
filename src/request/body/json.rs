@@ -1,4 +1,3 @@
-use serde_json;
 use serde_json::error::Error;
 
 use crate::items::Items;
