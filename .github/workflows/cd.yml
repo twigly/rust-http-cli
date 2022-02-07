@@ -1,0 +1,161 @@
+name: CD
+
+on:
+  create:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_TOML: Cargo.toml
+  BIN_NAME: rh
+  ARCHIVE_LINUX_EXT: .tar.gz
+  ARCHIVE_WINDOWS_EXT: .zip
+
+jobs:
+  version:
+    name: Version
+    runs-on: ubuntu-latest
+    outputs:
+      ARCHIVE_PREFIX_NAME: ${{ steps.ARCHIVE_PREFIX_NAME.outputs.value }}
+    steps:
+    - uses: actions/checkout@v2
+    - id: RELEASE_VERSION
+      run: echo "::set-output name=value::${GITHUB_REF#refs/*/}"
+    - name: Check version
+      if: ${{ !startsWith(steps.RELEASE_VERSION.outputs.value, 'v') }}
+      run: exit 101
+    - id: TAG_PKG_VERSION
+      run: echo "::set-output name=value::$(echo ${{steps.RELEASE_VERSION.outputs.value}} | cut -c 2-)"
+
+    - id: CARGO_PKG_VERSION
+      run: echo "::set-output name=value::$(grep '^version' $CARGO_TOML | cut -f2 -d'"')"
+    - name: Print versions
+      run: |
+        echo "TAG_PKG_VERSION....${{ steps.TAG_PKG_VERSION.outputs.value }}"
+        echo "CARGO_PKG_VERSION..${{ steps.CARGO_PKG_VERSION.outputs.value }}"
+        echo "...................${{ steps.TAG_PKG_VERSION.outputs.value != steps.CARGO_PKG_VERSION.outputs.value }}"
+        echo "RELEASE_VERSION....${{ steps.RELEASE_VERSION.outputs.value }}"
+    - name: Check versions
+      if: ${{ steps.TAG_PKG_VERSION.outputs.value != steps.CARGO_PKG_VERSION.outputs.value }}
+      run: exit 102
+      
+    - id: ARCHIVE_PREFIX_NAME
+      run: echo "::set-output name=value::$BIN_NAME-${{steps.RELEASE_VERSION.outputs.value}}"
+        
+  build:
+    name: Build (${{ matrix.os }})
+    needs: [version]
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        build: [linux-x86_64, linux-arm_32, macos-x86_64, win-msvc-x86_64, win-msvc-x86_32]
+        include:
+        - build: linux-x86_64
+          os: ubuntu-20.04
+          rust: stable
+          target: x86_64-unknown-linux-musl
+          strip: strip
+          cross: false
+        - build: linux-arm_32
+          os: ubuntu-20.04
+          rust: stable
+          target: arm-unknown-linux-gnueabihf
+          strip: arm-linux-gnueabihf-strip
+          cross: true
+        # # Strip doesn't work
+        # - build: linux-arm_64
+        #   os: ubuntu-20.04
+        #   rust: stable
+        #   target: aarch64-unknown-linux-gnu
+        #   strip: aarch64-linux-gnu-strip
+        #   cross: false
+        - build: macos-x86_64
+          os: macos-latest
+          rust: stable
+          target: x86_64-apple-darwin
+          strip: strip
+          cross: false
+        - build: win-msvc-x86_64
+          os: windows-2019
+          rust: stable
+          target: x86_64-pc-windows-msvc
+          cross: false
+        - build: win-msvc-x86_32
+          os: windows-2019
+          rust: stable
+          target: i686-pc-windows-msvc
+          cross: false
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: ${{ matrix.rust }}
+        target: ${{ matrix.target }}
+        override: true
+
+    - name: Test
+      uses: actions-rs/cargo@v1
+      with:
+        use-cross: ${{ matrix.cross }}
+        command: test
+        args: --target ${{ matrix.target }}
+
+    - name: Build
+      uses: actions-rs/cargo@v1
+      with:
+        use-cross: ${{ matrix.cross }}
+        command: build
+        args: --release --target ${{ matrix.target }}
+      
+    - name: Target directory
+      shell: bash
+      run: echo "BIN_DIR=target/${{ matrix.target }}/release" >> $GITHUB_ENV
+
+    - name: File list
+      run: |
+        ls target
+        ls target/${{ matrix.target }}
+
+    - name: Strip (Linux & MacOS)
+      if: matrix.strip == 'strip'
+      run: strip $BIN_DIR/$BIN_NAME
+      
+    - name: Strip (ARM)
+      if: ${{ matrix.strip != '' && matrix.strip != 'strip' }}
+      run: |
+        docker run --rm -v "$PWD/target:/target:Z" \
+                           rustembedded/cross:${{ matrix.target }} \
+                           ${{ matrix.strip }} \
+                           $BIN_DIR/$BIN_NAME
+
+    - name: Archive
+      shell: bash
+      run: |
+        archive_name=${{needs.version.outputs.ARCHIVE_PREFIX_NAME}}-${{ matrix.target }}
+        archive_dir=$archive_name
+        mkdir -p $archive_dir
+
+        if [ "${{ matrix.os }}" = "windows-2019" ]; then
+          cp $BIN_DIR/$BIN_NAME.exe $archive_dir
+          archive_filename="$archive_name$ARCHIVE_WINDOWS_EXT"
+          7z a "$archive_filename" "$archive_dir"
+          echo "RELEASE_ASSET=$archive_filename" >> $GITHUB_ENV
+        else
+          cp $BIN_DIR/$BIN_NAME $archive_dir
+          archive_filename="$archive_name$ARCHIVE_LINUX_EXT"
+          tar cvfz $archive_filename $archive_dir
+          echo "RELEASE_ASSET=$archive_filename" >> $GITHUB_ENV
+        fi
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ${{ env.RELEASE_ASSET }}

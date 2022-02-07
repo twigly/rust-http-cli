@@ -1,4 +1,4 @@
-name: CD Crates
+name: Publish Crate
 
 on:
   create:
