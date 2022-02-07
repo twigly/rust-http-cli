@@ -17,11 +17,11 @@ jobs:
       - run: echo 'The triggering workflow failed'
       - run: exit 100
       
-  on-success:
+  crates:
+    name: Crates.io
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: Publish to crates.io
       - uses: actions/checkout@v2
       - uses: katyo/publish-crates@v1
         with:
