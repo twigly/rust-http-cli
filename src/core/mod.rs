@@ -103,6 +103,8 @@ pub enum Error {
     Request(String),
     Io(String),
     Terminal,
+    #[cfg(config)]
+    Config(String, String),
 }
 
 pub type Result<T> = std::result::Result<T, Error>;

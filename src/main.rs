@@ -1,8 +1,10 @@
 mod app;
+#[cfg(config)]
 mod config;
 mod core;
 mod file;
 mod items;
+mod macros;
 mod parser;
 mod print;
 mod request;
@@ -10,7 +12,6 @@ mod terminal;
 #[cfg(test)]
 mod test;
 mod theme;
-mod macros;
 
 use crate::app::App;
 use std::env;

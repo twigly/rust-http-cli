@@ -37,6 +37,10 @@ impl fmt::Display for Error {
             Error::Request(err) => write!(f, "{}", err),
             Error::Io(err) => write!(f, "{}", err),
             Error::Terminal => write!(f, "can't print in the terminal"),
+            #[cfg(config)]
+            Error::Config(name, err) => {
+                write!(f, "can't use the config '{}' because of '{}'", name, err)
+            }
         }
     }
 }
