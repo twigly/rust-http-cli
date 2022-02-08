@@ -77,17 +77,17 @@ jobs:
           rust: stable
           target: x86_64-apple-darwin
           strip: strip
-          cross: false
+          cross: true
         - build: win-msvc-x86_64
           os: windows-2019
           rust: stable
           target: x86_64-pc-windows-msvc
-          cross: false
+          cross: true
         - build: win-msvc-x86_32
           os: windows-2019
           rust: stable
           target: i686-pc-windows-msvc
-          cross: false
+          cross: true
 
     steps:
     - uses: actions/checkout@v2
@@ -100,12 +100,12 @@ jobs:
         target: ${{ matrix.target }}
         override: true
 
-    - name: Test
-      uses: actions-rs/cargo@v1
-      with:
-        use-cross: ${{ matrix.cross }}
-        command: test
-        args: --target ${{ matrix.target }}
+#     - name: Test
+#       uses: actions-rs/cargo@v1
+#       with:
+#         use-cross: ${{ matrix.cross }}
+#         command: test
+#         args: --target ${{ matrix.target }}
 
     - name: Build
       uses: actions-rs/cargo@v1
@@ -117,11 +117,6 @@ jobs:
     - name: Target directory
       shell: bash
       run: echo "BIN_DIR=target/${{ matrix.target }}/release" >> $GITHUB_ENV
-
-    - name: File list
-      run: |
-        ls target
-        ls target/${{ matrix.target }}
 
     - name: Strip (Linux & MacOS)
       if: matrix.strip == 'strip'
