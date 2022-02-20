@@ -175,6 +175,8 @@ macro_rules! impl_from_signed {
 impl_from_unsigned!(u8, u16, u32, u64, usize);
 impl_from_signed!(i8, i16, i32, i64, isize);
 
+// UNIT TESTS /////////////////////////////////////////////////////////////////////////////
+
 #[cfg(test)]
 mod tests {
     use super::Number;

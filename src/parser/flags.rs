@@ -7,6 +7,8 @@ impl Default for Flags {
         Self {
             show_version: false,
             show_help: false,
+            show_short_help: false,
+            debug: false,
 
             https: false,
             http: false,
@@ -41,9 +43,11 @@ impl Flags {
         match flag {
             "--version" => self.show_version = true,
             "--help" => self.show_help = true,
-            "-u" | "--url" => self.show_request_url = true,
+            "--debug" => self.debug = true,
+            "-U" | "--url" => self.show_request_url = true,
             "-s" | "--status" => self.show_response_status = true,
             "-d" | "--direction" => self.show_direction = true,
+            "-v" | "--verbose" => self.enable_verbose(),
             "--pretty=c" | "--pretty=color" => self.use_color = true,
             "--json" => self.as_json = true,
             "--form" => self.as_form = true,
@@ -64,7 +68,11 @@ impl Flags {
                 self.show_response_headers = true;
             }
             "-H" | "--req-headers" => self.show_request_headers = true,
-            "-h" | "--header" => self.show_response_headers = true,
+            "-h" => {
+                self.show_short_help = true;
+                self.show_response_headers = true;
+            }
+            "--header" => self.show_response_headers = true,
             "-B" | "--req-body" => self.show_request_body = true,
             "-b" | "--body" => self.show_response_body = true,
             "-C" | "--req-compact" => self.show_request_compact = true,
@@ -81,8 +89,11 @@ impl Flags {
 
     fn extract_compact_flags(&mut self, flag: &str) -> bool {
         // FIXME Need something like "-no-bBH..." to set the related flags to false
-        let valid = Regex::new(r"^\-[cCdushHbB]*$").unwrap().is_match(flag);
+        let valid = Regex::new(r"^\-[vcCdUshHbB]*$").unwrap().is_match(flag);
         if valid {
+            if flag.contains('v') {
+                self.enable_verbose();
+            }
             if flag.contains('c') {
                 self.show_response_compact = true;
             }
@@ -92,7 +103,7 @@ impl Flags {
             if flag.contains('d') {
                 self.show_direction = true;
             }
-            if flag.contains('u') {
+            if flag.contains('U') {
                 self.show_request_url = true;
             }
             if flag.contains('s') {
@@ -114,10 +125,22 @@ impl Flags {
         valid
     }
 
+    fn enable_verbose(&mut self) {
+        self.show_direction = true;
+        self.show_request_url = true;
+        self.show_response_status = true;
+        self.show_request_headers = true;
+        self.show_response_headers = true;
+        self.show_request_body = true;
+        self.show_response_body = true;
+    }
+
     fn is_contradictory_scheme(&self) -> bool {
         self.http && self.https
     }
 }
+
+// UNIT TESTS /////////////////////////////////////////////////////////////////////////////
 
 #[cfg(test)]
 mod tests {

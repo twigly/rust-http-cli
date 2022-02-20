@@ -32,6 +32,8 @@ fn is_valid(keyword: &str) -> bool {
 //     .contains(&keyword)
 // }
 
+// UNIT TESTS /////////////////////////////////////////////////////////////////////////////
+
 #[cfg(test)]
 mod tests {
     use super::{from_str, Method};

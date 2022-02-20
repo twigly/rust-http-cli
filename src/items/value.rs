@@ -23,6 +23,8 @@ impl<'a> From<&'a str> for Value {
     }
 }
 
+// UNIT TESTS /////////////////////////////////////////////////////////////////////////////
+
 #[cfg(test)]
 mod tests {
     use super::Value;

@@ -34,6 +34,8 @@ pub fn normalize(url: &str, default_scheme: &str, default_host: &str) -> String 
     }
 }
 
+// UNIT TESTS /////////////////////////////////////////////////////////////////////////////
+
 #[cfg(test)]
 mod tests {
     use super::normalize;

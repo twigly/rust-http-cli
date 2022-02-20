@@ -1,25 +1,37 @@
 mod app;
-#[cfg(config)]
-mod config;
+mod commands;
 mod core;
-mod file;
 mod items;
 mod macros;
 mod parser;
-mod print;
 mod request;
-mod terminal;
+mod shell;
 #[cfg(test)]
 mod test;
 mod theme;
 
 use crate::app::App;
+use shell::os::DefaultOsDirs;
+use shell::Shell;
 use std::env;
+use std::io;
 
 fn main() {
-    let os_args = env::args().skip(1).collect::<Vec<_>>();
-    let app = App::new();
-    match app.run(&os_args) {
+    let mut os_args = env::args().skip(1).collect::<Vec<_>>();
+
+    // let stdout = io::stdout();
+    // let out = io::BufWriter::new(stdout.lock());
+    // let stderr = io::stderr();
+    // let err = io::BufWriter::new(stderr.lock());
+    // let mut shell = Shell::new(out, err);
+
+    let out = io::stdout();
+    let err = io::stderr();
+    let os_dirs = DefaultOsDirs::new();
+    let mut shell = Shell::new(&os_dirs, out, err);
+
+    let mut app = App::new(&mut shell);
+    match app.run(&mut os_args) {
         Ok(_) => app.exit(None),
         Err(err) => app.exit(Some(err)),
     }

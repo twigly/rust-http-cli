@@ -178,12 +178,26 @@ But you can preserve the colors with the ```--pretty=color``` option and ```less
 > rh :9200/_nodes --pretty=color | less -R
 ```
 
+## SSL Certificates
+
+You can use self-signed certificates (you can use PEM or DER format):
+
+```bash
+> rh https://localhost:8080 -v --cafile=rsa/ca.cert
+```
+
+The .der extension is required for using the DER format:
+
+```bash
+> rh https://localhost:8080 -v --cafile=rsa/ca.der
+```
+
 ## Some options
 
 Show the URL and method:
 
 ```bash
-> rh httpbin.org/get -u
+> rh httpbin.org/get -U
 ```
 
 Show the headers (request and response):
@@ -195,7 +209,7 @@ Show the headers (request and response):
 Show the URL, method, headers and the response body as a compact form:
 
 ```bash
-> rh httpbin.org/get -uhHc
+> rh httpbin.org/get -UhHc
 ```
 
 More options:

@@ -8,27 +8,31 @@ pub trait Theme {
     fn response(&self) -> Box<dyn ResponseTheme>;
 }
 
+pub trait DirectionTheme {
+    fn direction(&self, standard: bool) -> Style;
+}
+
 pub trait HeaderTheme {
     fn header_name(&self, standard: bool) -> Style;
     fn header_value(&self, standard: bool) -> Style;
 }
 
-pub trait RequestTheme: HeaderTheme {
+pub trait RequestTheme: HeaderTheme + DirectionTheme {
     fn as_header(&self) -> &dyn HeaderTheme;
+    fn as_direction(&self) -> &dyn DirectionTheme;
     fn primary(&self) -> Style;
     fn secondary(&self) -> Style;
     fn method(&self) -> Style;
     fn url(&self) -> Style;
-    fn direction(&self, standard: bool) -> Style;
 }
 
-pub trait ResponseTheme: HeaderTheme {
+pub trait ResponseTheme: HeaderTheme + DirectionTheme {
     fn as_header(&self) -> &dyn HeaderTheme;
+    fn as_direction(&self) -> &dyn DirectionTheme;
     fn primary(&self) -> Style;
     fn secondary(&self) -> Style;
     fn version(&self) -> Style;
     fn status(&self) -> Style;
-    fn direction(&self, standard: bool) -> Style;
 }
 
 #[cfg(test)]

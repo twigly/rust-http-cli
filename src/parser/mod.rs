@@ -6,16 +6,16 @@ mod method;
 mod normalizer;
 mod url;
 
-use crate::core::{Args, Error, Flags, Result};
+use crate::core::{Error, Flags, Result, Workspace};
 use crate::items::Items;
-use crate::terminal::{stream, Terminal};
+use crate::shell::stream;
 use crate::theme::default::DefaultTheme;
 use normalizer::Normalizer;
 use std::cell::RefCell;
 use std::io::{self, Read};
 
-pub fn execute(args: &[String]) -> Result<Args> {
-    validate_raw_args(args)?;
+pub fn execute(args: &[String]) -> Result<Workspace> {
+    validate_there_are_enough_args(args)?;
 
     let output_redirected = !stream::is_stdout();
     let mut normalizer = Normalizer::parse(args, output_redirected, "http", "localhost")?;
@@ -25,19 +25,19 @@ pub fn execute(args: &[String]) -> Result<Args> {
     let items = normalizer.items;
     let urls = normalizer.urls;
     let mut raw = normalizer.raw.take();
+    let certificate_authority_file = normalizer.certificate_authority_file.take();
 
     let input_redirected = !stream::is_stdin();
     if !is_flag_only_command(&flags) {
-        validate_processed_urls(&urls)?;
-        validate_processed_items(&items, &raw, input_redirected)?;
+        validate_processed_urls(&urls, &flags, args)?;
+        validate_there_is_no_mix_of_items_and_raw_and_stdin(&items, &raw, input_redirected)?;
     }
 
     if input_redirected {
         extract_input_as_raw_data(&mut raw)?;
     }
 
-    Ok(Args {
-        terminal: RefCell::new(Terminal::new(flags.use_color)),
+    Ok(Workspace {
         method,
         urls,
         output_redirected,
@@ -47,6 +47,7 @@ pub fn execute(args: &[String]) -> Result<Args> {
         headers: RefCell::new(headers),
         items: RefCell::new(items),
         raw,
+        certificate_authority_file,
     })
 }
 
@@ -58,7 +59,7 @@ fn extract_input_as_raw_data(raw: &mut Option<String>) -> Result<()> {
 }
 
 #[inline]
-fn validate_raw_args(args: &[String]) -> Result<()> {
+fn validate_there_are_enough_args(args: &[String]) -> Result<()> {
     let count = args.len();
     if count == 0 {
         Err(Error::NoArgs)
@@ -68,16 +69,20 @@ fn validate_raw_args(args: &[String]) -> Result<()> {
 }
 
 #[inline]
-fn validate_processed_urls(urls: &[String]) -> Result<()> {
+fn validate_processed_urls(urls: &[String], flags: &Flags, args: &[String]) -> Result<()> {
     if urls.is_empty() {
-        Err(Error::MissingUrl)
+        if short_help_flag(flags, args) {
+            Ok(())
+        } else {
+            Err(Error::MissingUrl)
+        }
     } else {
         Ok(())
     }
 }
 
 #[inline]
-fn validate_processed_items(
+fn validate_there_is_no_mix_of_items_and_raw_and_stdin(
     items: &Items,
     raw: &Option<String>,
     input_redirected: bool,
@@ -91,7 +96,12 @@ fn validate_processed_items(
 
 #[inline]
 fn is_flag_only_command(flags: &Flags) -> bool {
-    flags.show_version || flags.show_help
+    flags.show_version || flags.show_help || flags.debug
+}
+
+#[inline]
+fn short_help_flag(flags: &Flags, args: &[String]) -> bool {
+    flags.show_short_help && args.len() == 1
 }
 
 fn terminal_columns() -> u16 {
@@ -100,6 +110,8 @@ fn terminal_columns() -> u16 {
         None => 100,
     }
 }
+
+// UNIT TESTS /////////////////////////////////////////////////////////////////////////////
 
 #[cfg(test)]
 mod tests {
@@ -115,17 +127,31 @@ mod tests {
             assert_eq!(parser.flags.show_version, true);
         }
 
+        // #[test]
+        // fn show_short_version() {
+        //     let args = crate::args!["-v"];
+        //     let parser = execute(&args).unwrap();
+        //     assert_eq!(parser.flags.show_short_version, true);
+        // }
+
         #[test]
         fn show_help() {
             let args = crate::args!["--help"];
             let parser = execute(&args).unwrap();
             assert_eq!(parser.flags.show_help, true);
         }
+
+        #[test]
+        fn show_short_help() {
+            let args = crate::args!["-h"];
+            let parser = execute(&args).unwrap();
+            assert_eq!(parser.flags.show_short_help, true);
+        }
     }
 
     mod validate {
         use super::*;
-        use crate::core::PushItem;
+        use crate::core::PushDataItem;
 
         const NO_STDIN_DATA: bool = false;
         const STDIN_DATA: bool = true;
@@ -144,69 +170,96 @@ mod tests {
         #[test]
         fn error_if_no_args() {
             let args = crate::args![];
-            let parser = validate_raw_args(&args);
+            let parser = validate_there_are_enough_args(&args);
             assert!(parser.is_err());
             assert_eq!(parser.unwrap_err(), Error::NoArgs);
         }
 
         #[test]
-        fn multi_args() {
+        fn basic_validation_if_multi_args() {
             let args = crate::args!["GET", "localhost"];
-            let parser = validate_raw_args(&args);
+            let parser = validate_there_are_enough_args(&args);
             assert!(parser.is_ok());
         }
 
         #[test]
         fn error_if_no_urls() {
-            let parser = validate_processed_urls(&[]);
+            let args = crate::args![];
+            let flags = Flags::default();
+            let parser = validate_processed_urls(&[], &flags, &args);
             assert!(parser.is_err());
             assert_eq!(parser.unwrap_err(), Error::MissingUrl);
         }
 
         #[test]
-        fn one_urls() {
+        fn validate_if_one_url() {
+            let args = crate::args!["test.com"];
+            let flags = Flags::default();
             let urls = crate::args!["test.com"];
-            let parser = validate_processed_urls(&urls);
+            let parser = validate_processed_urls(&urls, &flags, &args);
             assert!(parser.is_ok());
         }
 
         #[test]
-        fn raw_data() {
+        fn raw_data_only() {
             let items = Items::new();
             let raw_data = Some("hello".into());
-            let parser = validate_processed_items(&items, &raw_data, NO_STDIN_DATA);
+            let parser = validate_there_is_no_mix_of_items_and_raw_and_stdin(
+                &items,
+                &raw_data,
+                NO_STDIN_DATA,
+            );
             assert!(parser.is_ok());
         }
 
         #[test]
-        fn key_value() {
+        fn key_value_only() {
             let mut items = Items::new();
             let _ = items.push("key=value");
-            let parser = validate_processed_items(&items, &None, NO_STDIN_DATA);
+            let parser =
+                validate_there_is_no_mix_of_items_and_raw_and_stdin(&items, &None, NO_STDIN_DATA);
             assert!(parser.is_ok());
         }
 
         #[test]
-        fn stdin() {
+        fn stdin_only() {
             let items = Items::new();
-            let parser = validate_processed_items(&items, &None, STDIN_DATA);
+            let parser =
+                validate_there_is_no_mix_of_items_and_raw_and_stdin(&items, &None, STDIN_DATA);
             assert!(parser.is_ok());
         }
 
         #[test]
-        fn error_if_mixed_items() {
-            let mut items = Items::new();
+        fn error_if_mix_raw_and_stdin() {
+            let items = Items::new();
             let raw_data = Some("hello".into());
-            let parser = validate_processed_items(&items, &raw_data, STDIN_DATA);
+            let parser =
+                validate_there_is_no_mix_of_items_and_raw_and_stdin(&items, &raw_data, STDIN_DATA);
             assert!(parser.is_err());
             assert_eq!(parser.unwrap_err(), Error::ItemsAndRawMix);
+        }
 
-            let _ = items.push("key=value");
-            let parser = validate_processed_items(&items, &raw_data, NO_STDIN_DATA);
+        #[test]
+        fn error_if_mix_key_value_and_raw() {
+            let mut items = Items::new();
+            items.push("key=value").expect("Cannot add key/value item");
+            let raw_data = Some("hello".into());
+            let parser = validate_there_is_no_mix_of_items_and_raw_and_stdin(
+                &items,
+                &raw_data,
+                NO_STDIN_DATA,
+            );
             assert!(parser.is_err());
             assert_eq!(parser.unwrap_err(), Error::ItemsAndRawMix);
+        }
 
-            let parser = validate_processed_items(&items, &raw_data, STDIN_DATA);
+        #[test]
+        fn error_if_mix_key_value_and_stdin() {
+            let mut items = Items::new();
+            items.push("key=value").expect("Cannot add key/value item");
+            let raw_data = Some("hello".into());
+            let parser =
+                validate_there_is_no_mix_of_items_and_raw_and_stdin(&items, &raw_data, STDIN_DATA);
             assert!(parser.is_err());
             assert_eq!(parser.unwrap_err(), Error::ItemsAndRawMix);
         }
@@ -216,7 +269,15 @@ mod tests {
         use super::*;
 
         #[test]
-        fn method_and_url() {
+        fn hostname_only() {
+            let args = crate::args!["localhost"];
+            let parser = execute(&args).unwrap();
+            assert_eq!(parser.urls.len(), 1);
+            crate::assert_str_eq!(parser.urls[0], "http://localhost");
+        }
+
+        #[test]
+        fn method_and_hostname() {
             let args = crate::args!["GET", "localhost"];
             let parser = execute(&args).unwrap();
             assert_eq!(parser.urls.len(), 1);
@@ -224,7 +285,7 @@ mod tests {
         }
 
         #[test]
-        fn method_and_url_and_flag() {
+        fn method_and_hostname_and_flag() {
             let args = crate::args!["GET", "localhost", "--headers"];
             let parser = execute(&args).unwrap();
             assert_eq!(parser.urls.len(), 1);

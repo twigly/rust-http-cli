@@ -1,14 +1,18 @@
 use super::Error;
 use crate::rh_name;
-use crate::terminal::{stream, Terminal};
+use crate::shell::os::OsDirs;
+use crate::shell::{error::ErrorRender, Shell};
 use std::fmt;
+use std::io::Write;
 
-pub fn show(err: &Error) {
-    let output_redirected = !stream::is_stdout();
-    let res = Terminal::new(!output_redirected).error_with_message(err);
+pub fn show<OD: OsDirs, O: Write, E: Write>(shell: &mut Shell<OD, O, E>, err: &Error) {
+    let rf = ErrorRender::new(err);
+    let res = shell.err(rf);
     match res {
         Ok(_) => {}
-        Err(err) => println!("{}", err),
+        Err(err) => {
+            let _ = writeln!(std::io::stderr(), "{}", err);
+        }
     }
 }
 
@@ -36,10 +40,35 @@ impl fmt::Display for Error {
             Error::BadHeaderValue(_) => write!(f, "invalid header value."),
             Error::Request(err) => write!(f, "{}", err),
             Error::Io(err) => write!(f, "{}", err),
-            Error::Terminal => write!(f, "can't print in the terminal"),
-            #[cfg(config)]
-            Error::Config(name, err) => {
-                write!(f, "can't use the config '{}' because of '{}'", name, err)
+            #[cfg(feature = "alias")]
+            Error::AliasCommand(err) => {
+                writeln!(f, "the alias subcommand failed, {}", err)?;
+                write!(
+                    f,
+                    "try '{} {} --help' for more information.",
+                    rh_name!(),
+                    crate::commands::alias::COMMAND_ALIAS
+                )
+            }
+            #[cfg(feature = "alias")]
+            Error::Alias(err) => {
+                writeln!(f, "cannot find the alias '{}'", err)?;
+                write!(
+                    f,
+                    "try '{} {} --help' for more information.",
+                    rh_name!(),
+                    crate::commands::alias::COMMAND_ALIAS
+                )
+            }
+            #[cfg(feature = "alias")]
+            Error::AliasOther => {  // FIXME To be removed
+                writeln!(f, "unknown error with alias")?;
+                write!(
+                    f,
+                    "try '{} {} --help' for more information.",
+                    rh_name!(),
+                    crate::commands::alias::COMMAND_ALIAS
+                )
             }
         }
     }

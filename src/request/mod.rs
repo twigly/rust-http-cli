@@ -1,41 +1,31 @@
 mod body;
+mod certificate;
+
 pub(crate) mod header;
 pub(crate) mod headers;
-
-use crate::core::{Args, Error, Result};
+use crate::core::{Error, Result, Workspace};
 use body::Body;
-use reqwest::{
-    blocking::{self, RequestBuilder},
-    header::HeaderMap,
-};
+use std::time::Duration;
 
 pub type Response = reqwest::blocking::Response;
 pub type Method = reqwest::Method;
+pub type HeaderMap = reqwest::header::HeaderMap;
 
-pub trait Request {
-    fn request(&self, method: Method, url: String) -> RequestBuilder;
-}
+pub fn execute(args: &Workspace, req_number: u8, headers: &HeaderMap) -> Result<Response> {
+    let mut client_builder = reqwest::blocking::Client::builder()
+        .default_headers(headers.clone())
+        .gzip(false)
+        .timeout(Duration::from_secs(10));
 
-pub fn execute(args: &Args, req_number: u8, headers: &HeaderMap) -> Result<Response> {
-    let client = blocking::Client::new();
-    execute_request(args, req_number, headers, client)
-}
+    if let Some(cafile) = args.certificate_authority_file.as_ref() {
+        let cert = certificate::load(cafile)?;
+        client_builder = client_builder.add_root_certificate(cert);
+    }
 
-fn execute_request(
-    args: &Args,
-    req_number: u8,
-    headers: &HeaderMap,
-    builder: blocking::Client,
-) -> Result<Response> {
+    let client = client_builder.build()?;
     let method = args.method.clone();
     let url = &args.urls[req_number as usize];
-
-    let response = builder
-        .request(method, url)
-        .headers(headers.clone())
-        .body_if_items(args)
-        .send()?;
-
+    let response = client.request(method, url).body_if_items(args).send()?;
     Ok(response)
 }
 

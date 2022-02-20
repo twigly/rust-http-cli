@@ -49,6 +49,7 @@ Everything that improves performance is welcome.
 - [ ] Read file content using the symbol ```@``` (for example ```--raw=@/path/file``` or ```key=@/path/file```)
 - [ ] Append URL parameters via items
 - [ ] Set a max redirects
+- [ ] Show redirects if --verbose
 - [ ] Set a timeout
 - [ ] Option to sort header and JSON keys (for example ```--sort``` to sort both of them, ```--sort=h``` to sort headers, ```--sort=j``` to sort JSON keys)
 - [ ] Specify cookies without using the ```cookies``` header (and avoid using ```"``` to escape the ```;``` separator) - maybe not worth (low priority)

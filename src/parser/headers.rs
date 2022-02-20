@@ -1,9 +1,9 @@
 pub use crate::core::HeaderMap;
-use crate::core::{Error, PushItem, Result};
+use crate::core::{Error, PushDataItem, Result};
 use reqwest::header::{HeaderName, HeaderValue};
 use std::str::FromStr;
 
-impl PushItem for HeaderMap {
+impl PushDataItem for HeaderMap {
     fn push(&mut self, item: &str) -> Result<()> {
         match item.split_once(":") {
             Some(parts) => {

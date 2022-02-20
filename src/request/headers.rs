@@ -1,10 +1,10 @@
-use crate::core::{ArgItems, Args};
+use crate::core::{WorkspaceData, Workspace};
 use crate::{rh_homepage, rh_name, rh_version};
 use reqwest::header::{HeaderMap, HeaderValue};
 
 use super::header;
 
-pub fn upgrade(args: &Args, headers: &mut HeaderMap) {
+pub fn upgrade(args: &Workspace, headers: &mut HeaderMap) {
     if args.is_json() {
         if !headers.contains_key(header::CONTENT_TYPE) {
             headers.append(

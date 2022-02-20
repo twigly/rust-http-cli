@@ -1,9 +1,9 @@
-use super::core::{ArgDetection, RAW_FLAG};
+use super::core::{ArgDetection, CAFILE_FLAG, RAW_FLAG};
 use super::headers::HeaderMap;
 use super::method;
 use super::url;
 use crate::core::Flags;
-use crate::core::{Error, PushItem};
+use crate::core::{Error, PushDataItem};
 use crate::items::Items;
 use crate::request::Method;
 
@@ -15,6 +15,7 @@ pub struct Normalizer {
     pub headers: HeaderMap,
     pub items: Items,
     pub raw: Option<String>,
+    pub certificate_authority_file: Option<String>,
 }
 
 impl Normalizer {
@@ -30,6 +31,7 @@ impl Normalizer {
         let mut headers = HeaderMap::new();
         let mut items = Items::new();
         let mut raw: Option<String> = None;
+        let mut certificate_authority_file: Option<String> = None;
         let args_length = args.len();
 
         for (arg_index, arg) in args.iter().enumerate().take(args_length) {
@@ -45,7 +47,7 @@ impl Normalizer {
                     urls.push(arg.clone());
                     continue;
                 }
-            } else if arg.is_url() {
+            } else if arg.is_url() || arg.is_very_likely_url() {
                 urls.push(arg.clone());
                 continue;
             }
@@ -57,6 +59,11 @@ impl Normalizer {
                 }
                 if !raw_data.is_empty() {
                     raw = Some(raw_data);
+                }
+            } else if arg.is_cafile_flag() {
+                let cafile = arg[CAFILE_FLAG.len()..].to_string();
+                if !cafile.is_empty() {
+                    certificate_authority_file = Some(cafile);
                 }
             } else if arg.is_flag() {
                 flags.push(arg)?;
@@ -97,6 +104,7 @@ impl Normalizer {
             headers,
             items,
             raw,
+            certificate_authority_file,
         })
     }
 
@@ -119,6 +127,8 @@ impl Normalizer {
     }
 }
 
+// UNIT TESTS /////////////////////////////////////////////////////////////////////////////
+
 // FIXME More tests (in particular if output_redirected=true)
 #[cfg(test)]
 mod tests {
@@ -138,14 +148,15 @@ mod tests {
     }
 
     mod method {
-        use super::{Error, Normalizer};
+        use super::*;
         use super::{DEFAULT_HOST, DEFAULT_SCHEME};
         use crate::request::Method;
 
         #[test]
         fn standard_method() {
             let args = crate::args!["HEAD", "localhost"];
-            let normalizer = Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST).unwrap();
+            let normalizer = Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST)
+                .expect("Cannot parse standard method");
             assert_eq!(normalizer.method, Some(Method::HEAD));
             assert_eq!(normalizer.urls.len(), 1);
         }
@@ -153,7 +164,8 @@ mod tests {
         #[test]
         fn custom_method() {
             let args = crate::args!["HELLO", "localhost"];
-            let normalizer = Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST).unwrap();
+            let normalizer = Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST)
+                .expect("Cannot parse custom method");
             assert_eq!(
                 normalizer.method,
                 Some(Method::from_bytes(b"HELLO").unwrap())
@@ -164,12 +176,9 @@ mod tests {
         #[test]
         fn no_methods_because_lowercase() {
             let args = crate::args!["get", "localhost"];
-            let normalizer = Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST);
-            assert!(normalizer.is_err());
-            assert_eq!(
-                normalizer.unwrap_err(),
-                Error::Unexpected("localhost".into())
-            );
+            let normalizer = Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST)
+                .expect("Cannot parse multi-urls");
+            assert_eq!(normalizer.urls.len(), 2);
         }
     }
 

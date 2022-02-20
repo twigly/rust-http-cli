@@ -1,70 +1,53 @@
-#[cfg(not(feature = "screencast"))]
+#[cfg(feature = "spinner")]
 mod busy;
 mod error;
 mod exit;
-mod output;
-mod usage;
-mod version;
 
-use crate::core::{Error, Mode};
-use crate::parser;
-use crate::request;
+use crate::commands::ArgsCommand;
+use crate::core::{Args, Error, Result};
+use crate::shell::os::OsDirs;
+use crate::shell::Shell;
+use std::io::Write;
 
-#[cfg(not(feature = "screencast"))]
+#[cfg(feature = "spinner")]
 use busy::Spinner;
 
-pub struct App {
-    #[cfg(not(feature = "screencast"))]
+pub struct App<'a, OD, O, E> {
+    shell: &'a mut Shell<'a, OD, O, E>,
+    #[cfg(feature = "spinner")]
     busy: Spinner,
 }
 
-impl App {
-    pub fn new() -> Self {
+impl<'a, OD: OsDirs, O: Write, E: Write> App<'a, OD, O, E> {
+    pub fn new(shell: &'a mut Shell<'a, OD, O, E>) -> Self {
         Self {
-            #[cfg(not(feature = "screencast"))]
+            shell,
+            #[cfg(feature = "spinner")]
             busy: busy::Spinner::new(),
         }
     }
 
     pub fn exit(self, err: Option<Error>) {
-        #[cfg(not(feature = "screencast"))]
+        #[cfg(feature = "spinner")]
         self.busy.done();
+
         match err {
             Some(err) => {
-                // usage::show(&err);
-                error::show(&err);
+                error::show(self.shell, &err);
                 exit::error(err);
             }
             None => exit::success(),
         }
     }
 
-    pub fn run(&self, args: &[String]) -> Result<(), Error> {
-        let args = parser::execute(args)?;
-        match args.mode() {
-            Mode::Help => {
-                #[cfg(not(feature = "screencast"))]
-                self.busy.clone().done();
-                usage::help()
-            }
-            Mode::Version => {
-                #[cfg(not(feature = "screencast"))]
-                self.busy.clone().done();
-                version::show()
-            }
-            Mode::Run => {
-                {
-                    let mut headers = args.headers.borrow_mut();
-                    request::headers::upgrade(&args, &mut headers);
-                }
-                let headers = args.headers.borrow();
-                let req_number = 0u8;
-                let mut response = request::execute(&args, req_number, &headers)?;
-                #[cfg(not(feature = "screencast"))]
-                self.busy.clone().done();
-                output::render(&args, req_number, &mut response)?;
-            }
-        }
+    pub fn run(&mut self, args: &mut Args) -> Result<()> {
+        let command = args.command(self.shell.os_dirs())?;
+        command.execute(self.shell, args, || {})?;
+
+        #[cfg(feature = "spinner")]
+        self.busy.clone().done();
+
+        // self.shell.flush()?;
         Ok(())
     }
 }

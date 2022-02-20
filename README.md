@@ -1,6 +1,10 @@
 # rh: user-friendly command-line HTTP client
 
-```rh``` is a user-friendly command-line tool to request HTTP APis. You can debug, test and verify any HTTP APi with ```rh``` in a simple and efficient way. ```rh``` is a standalone application with no runtime or garbage collector, so it doesn't require Python or Java installed on your machine for example. ```rh``` is based on [Rust](https://www.rust-lang.org) that is a blazing fast and memory-efficient language. The name ```rh``` stands for Rust HTTP.
+```rh``` is a user-friendly, lightweight and performant command-line tool to request HTTP APis. You can debug, test and verify any HTTP APi with ```rh``` in a simple and efficient way. ```rh``` is focused on performance and stability. You don't need OpenSSL because ```rh``` is based on Rustls, a modern TLS library alternative to OpenSSL.
+
+```rh``` is a standalone application with no runtime or garbage collector, so it doesn't require Python or Java installed on your machine for example. ```rh``` is based on [Rust](https://www.rust-lang.org) that is a blazing fast and memory-efficient language.
+
+The name ```rh``` stands for Rust HTTP.
 
 <img width="600" src="doc/rh-screencast.svg">
 
@@ -19,42 +23,41 @@ You can already use ```rh```, some features are not available yet. And new featu
 - [X] JSON made simple for command-line
 - [X] JSON-friendly
 - [X] Headers made simple for command-line
-- [ ] Don't repeat yourself with [configurations](doc/configuration.md)
+- [X] Self-signed SSL certificates
+- [X] Don't repeat yourself with [aliases](doc/alias.md)
 - [ ] Package manager
-- [ ] More options with SSL
 - [ ] Multi URLs
+- [ ] Better help & version ([help & version](doc/help-and-version.md))
 
 For now, the priority is:
 
-- configurations
-- package manager
-- SSL options
+- Aliases: done
+- Package manager: in progress
+- Self-signed SSL certificates: done (more SSL options in the future)
 
 # Don't repeat yourself
 
-This feature is in progress and not available yet.
+If you're used to execute very often the same requests, you can save time. An **alias** helps to change default values or create shortcuts. You can predefine what you like, it could be only the headers for example, or everything.
 
-If you're used to execute very often the same requests, you can save time. A config helps to change default values or create shortcuts. You can predefine what you like, it could be only the headers for example, or everything.
-
-For example, someone could create a configuration ```mp1-status``` (that would stand for "my-project-1" for example). Let's say you want to execute the following command very often:
+For example, someone could create an alias ```mp1-status``` (that would stand for "my-project-1" for example). Let's say you want to execute the following command very often:
 
 ```bash
-> rh http://local-dev-mp1/status -uHhc X-Custom-Header:My-app
+> rh http://local-dev-mp1/status -UHhc X-Custom-Header:My-app
 ```
 
-```-uHhc``` to show the ```-u```RL and the method + to show the request ```-H```eaders + to show the response ```-h```eaders + to show a ```-c```ompact response
+```-UHhc``` to show the ```-U```RL and the method + to show the request ```-H```eaders + to show the response ```-h```eaders + to show a ```-c```ompact response
 
 ```bash
-> rh config mp1-status http://local-dev-mp1/status -chuH X-App:My-app
+> rh alias @mp1-status http://local-dev-mp1/status -UHhc X-Custom-Header:My-app
 ```
 
 So now, you can reuse this config:
 
 ```bash
-> rh mp1-status
+> rh @mp1-status
 ```
 
-→ [See more about configurations](doc/configuration.md)
+→ [See more about aliases](doc/alias.md)
 
 # Examples
 

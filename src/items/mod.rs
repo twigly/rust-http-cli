@@ -2,7 +2,7 @@ mod number;
 mod ser;
 mod value;
 
-use crate::core::{Error, PushItem};
+use crate::core::{Error, PushDataItem};
 use std::collections::HashMap;
 use value::Value;
 
@@ -10,16 +10,13 @@ pub type Items = HashMap<String, Value>;
 
 const FORCE_STRING: &str = "/";
 
-impl PushItem for Items {
+impl PushDataItem for Items {
     fn push(&mut self, item: &str) -> Result<(), Error> {
         match item.split_once("=") {
             Some(parts) => {
                 let key = parts.0.to_string();
                 if key.ends_with(FORCE_STRING) {
-                    self.insert(
-                        key[..(key.len() - 1)].to_string(),
-                        Value::String(parts.1.to_string()),
-                    )
+                    self.insert(key[..(key.len() - 1)].to_string(), Value::String(parts.1.to_string()))
                 } else {
                     self.insert(key, parts.1.into())
                 }
@@ -30,9 +27,11 @@ impl PushItem for Items {
     }
 }
 
+// UNIT TESTS /////////////////////////////////////////////////////////////////////////////
+
 #[cfg(test)]
 mod tests {
-    use super::{Items, PushItem, Value, FORCE_STRING};
+    use super::{Items, PushDataItem, Value, FORCE_STRING};
 
     macro_rules! assert_item_eq {
         ($item:expr, $key:expr, $value:expr) => {
@@ -76,36 +75,12 @@ mod tests {
 
         assert_item_eq!("k|e|y=$true", "k|e|y", value_string!("$true"));
         assert_item_eq!("k.e.y=$false", "k.e.y", value_string!("$false"));
-        assert_item_eq!(
-            key_value_force_string!("k|e|y", "true"),
-            "k|e|y",
-            value_string!("true")
-        );
-        assert_item_eq!(
-            key_value_force_string!("k|e|y", "y"),
-            "k|e|y",
-            value_string!("y")
-        );
-        assert_item_eq!(
-            key_value_force_string!("k.e.y", "false"),
-            "k.e.y",
-            value_string!("false")
-        );
-        assert_item_eq!(
-            key_value_force_string!("k|e|y", "n"),
-            "k|e|y",
-            value_string!("n")
-        );
-        assert_item_eq!(
-            key_value_force_string!("@key", "hello"),
-            "@key",
-            value_string!("hello")
-        );
-        assert_item_eq!(
-            key_value_force_string!("@key$", "hello"),
-            "@key$",
-            value_string!("hello")
-        );
+        assert_item_eq!(key_value_force_string!("k|e|y", "true"), "k|e|y", value_string!("true"));
+        assert_item_eq!(key_value_force_string!("k|e|y", "y"), "k|e|y", value_string!("y"));
+        assert_item_eq!(key_value_force_string!("k.e.y", "false"), "k.e.y", value_string!("false"));
+        assert_item_eq!(key_value_force_string!("k|e|y", "n"), "k|e|y", value_string!("n"));
+        assert_item_eq!(key_value_force_string!("@key", "hello"), "@key", value_string!("hello"));
+        assert_item_eq!(key_value_force_string!("@key$", "hello"), "@key$", value_string!("hello"));
 
         assert_item_eq!("a=1", "a", value_number!(1));
         assert_item_eq!("bc=123", "bc", value_number!(123));
