@@ -105,14 +105,14 @@ jobs:
 #       with:
 #         use-cross: ${{ matrix.cross }}
 #         command: test
-#         args: --target ${{ matrix.target }}
+#         args: --features alias --target ${{ matrix.target }}
 
     - name: Build
       uses: actions-rs/cargo@v1
       with:
         use-cross: ${{ matrix.cross }}
         command: build
-        args: --release --target ${{ matrix.target }}
+        args: --release --features alias --target ${{ matrix.target }}
       
     - name: Target directory
       shell: bash
