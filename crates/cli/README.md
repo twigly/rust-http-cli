@@ -9,13 +9,13 @@
 
 The name ```rh``` stands for Rust HTTP.
 
-<img width="600" src="doc/rh-screencast.svg">
+<img width="600" src="../../doc/rh-screencast.svg">
 
 # Getting started
 
-→ [Installation guide](doc/install.md)
+→ [Installation guide](../../doc/install.md)
 
-→ [Contributing guide](doc/contributing.md)
+→ [Contributing guide](../../doc/contributing.md)
 
 # Features
 
@@ -27,11 +27,11 @@ You can already use ```rh```, some features are not available yet. And new featu
 - [X] JSON-friendly
 - [X] Headers made simple for command-line
 - [X] Self-signed SSL certificates
-- [X] Don't repeat yourself with [aliases](doc/alias.md)
+- [X] Don't repeat yourself with [aliases](../../doc/alias.md)
 - [ ] Package manager
 - [ ] Multi URLs
-- [ ] Better help & version ([help & version](doc/help-and-version.md))
-- More [to do](doc/todo.md)
+- [ ] Better help & version ([help & version](../../doc/help-and-version.md))
+- More [to do](../../doc/todo.md)
 
 
 # Don't repeat yourself
@@ -56,7 +56,7 @@ So now, you can reuse this config:
 > rh @mp1-status
 ```
 
-→ [See more about aliases](doc/alias.md)
+→ [See more about aliases](../../doc/alias.md)
 
 # Examples
 
@@ -78,7 +78,7 @@ Localhost with a particular port:
 > rh :9200
 ```
 
-You can POST data as JSON (it's the default format, see [more about it](doc/json.md)):
+You can POST data as JSON (it's the default format, see [more about it](../../doc/json.md)):
 
 ```bash
 > rh https://httpbin.org/anything X-App:Super1 item1=Hello item2=World
@@ -102,7 +102,7 @@ You can download a file and save it:
 > rh https://httpbin.org/image/jpeg > image.jpeg
 ```
 
-→ [More examples](doc/examples.md)
+→ [More examples](../../doc/examples.md)
 
 # License
 
@@ -110,6 +110,6 @@ You can download a file and save it:
 
 # Contributing
 
-If you are interested in contributing to the ```rh``` project, please take a look at the [contributing guide](doc/contributing.md). If you'd like to request a feature or report a bug, please create a [GitHub issue](https://github.com/twigly/rh/issues).
+If you are interested in contributing to the ```rh``` project, please take a look at the [contributing guide](../../doc/contributing.md). If you'd like to request a feature or report a bug, please create a [GitHub issue](https://github.com/twigly/rh/issues).
 
 Thanks to the people developing the third party libraries used in this project.
