@@ -1,20 +1,8 @@
-mod app;
-mod commands;
-mod core;
-mod items;
-mod macros;
-mod parser;
-mod request;
-mod shell;
-#[cfg(test)]
-mod test;
-mod theme;
-
-use crate::app::App;
-use shell::os::DefaultOsDirs;
-use shell::Shell;
+use rh::shell::os::DefaultOsDirs;
+use rh::shell::Shell;
 use std::env;
 use std::io;
+use std::process::exit;
 
 fn main() {
     let mut os_args = env::args().skip(1).collect::<Vec<_>>();
@@ -27,12 +15,9 @@ fn main() {
 
     let out = io::stdout();
     let err = io::stderr();
-    let os_dirs = DefaultOsDirs::new();
+    let os_dirs = DefaultOsDirs::default();
     let mut shell = Shell::new(&os_dirs, out, err);
 
-    let mut app = App::new(&mut shell);
-    match app.run(&mut os_args) {
-        Ok(_) => app.exit(None),
-        Err(err) => app.exit(Some(err)),
-    }
+    let exit_code = rh::run(&mut os_args, &mut shell);
+    exit(exit_code);
 }

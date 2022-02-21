@@ -27,16 +27,16 @@ impl<'a, OD: OsDirs, O: Write, E: Write> App<'a, OD, O, E> {
         }
     }
 
-    pub fn exit(self, err: Option<Error>) {
+    pub fn exit_code(self, err: Option<Error>) -> i32 {
         #[cfg(feature = "spinner")]
         self.busy.done();
 
         match err {
             Some(err) => {
                 error::show(self.shell, &err);
-                exit::error(err);
+                exit::code_on_error(err)
             }
-            None => exit::success(),
+            None => exit::code_on_success(),
         }
     }
 

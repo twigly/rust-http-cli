@@ -1,14 +1,21 @@
 use super::Error;
-use std::process::exit;
 
 pub const SUCCESS: i32 = 0;
-pub const ERROR: i32 = 1;
 
-pub fn success() {
-    exit(SUCCESS);
+pub fn code_on_success() -> i32 {
+    SUCCESS
 }
 
-pub fn error(_: Error) {
-    // FIXME Return an exit code based on the error
-    exit(ERROR);
+pub fn code_on_error(err: Error) -> i32 {
+    // FIXME All errors must have an exit code
+    match err {
+        Error::NoArgs => 100,
+        Error::MissingUrl => 101,
+        Error::ItemsAndRawMix => 200,
+        Error::TooManyRaw => 201,
+        Error::ContradictoryScheme => 301,
+        Error::AliasCommand(_) => 950,
+        Error::Alias(_) => 900,
+        _ => 999,
+    }
 }
