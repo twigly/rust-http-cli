@@ -99,7 +99,7 @@ mod tests {
     use crate::commands::alias::error::ErrorKind;
     use crate::core::{Error as CoreError, Result};
     use crate::test::alias::*;
-    use crate::test::os::{app_config_directory_for_tests_only, TestInvalidOsDirs, TestNoOsDirs, TestValidOsDirs};
+    use crate::test::os::{TestInvalidOsDirs, TestNoOsDirs, TestValidOsDirs};
     use crate::{arg_alias, args, commands::Command};
 
     mod basic {

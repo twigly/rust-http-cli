@@ -1,5 +1,8 @@
+#[cfg(feature = "alias")]
 use crate::shell::os::OsDirs;
-use std::{env, path::Path};
+use std::env;
+#[cfg(feature = "alias")]
+use std::path::Path;
 
 const KEY_WIDTH: usize = 25;
 
