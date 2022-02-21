@@ -50,19 +50,13 @@ mod tests {
 
     macro_rules! assert_normalize_with_defaults {
         ($url:expr, $expected:expr) => {
-            assert_eq!(
-                normalize($url, DEFAULT_SCHEME, DEFAULT_HOST),
-                format!($expected, DEFAULT_SCHEME, DEFAULT_HOST)
-            )
+            assert_eq!(normalize($url, DEFAULT_SCHEME, DEFAULT_HOST), format!($expected, DEFAULT_SCHEME, DEFAULT_HOST))
         };
     }
 
     macro_rules! assert_normalize_with_default_scheme {
         ($url:expr, $expected:expr) => {
-            assert_eq!(
-                normalize($url, DEFAULT_SCHEME, DEFAULT_HOST),
-                format!($expected, DEFAULT_SCHEME)
-            )
+            assert_eq!(normalize($url, DEFAULT_SCHEME, DEFAULT_HOST), format!($expected, DEFAULT_SCHEME))
         };
     }
 
@@ -76,14 +70,8 @@ mod tests {
     fn macro_assert_normalise() {
         assert_valid!("http://test.com");
         assert_normalize!("http://test.com", "http://test.com");
-        assert_normalize_with_defaults!(
-            format!("{}://{}", DEFAULT_SCHEME, DEFAULT_HOST).as_str(),
-            "{}://{}"
-        );
-        assert_normalize_with_default_scheme!(
-            format!("{}://{}", DEFAULT_SCHEME, "host-example.com").as_str(),
-            "{}://host-example.com"
-        );
+        assert_normalize_with_defaults!(format!("{}://{}", DEFAULT_SCHEME, DEFAULT_HOST).as_str(), "{}://{}");
+        assert_normalize_with_default_scheme!(format!("{}://{}", DEFAULT_SCHEME, "host-example.com").as_str(), "{}://host-example.com");
     }
 
     #[test]
