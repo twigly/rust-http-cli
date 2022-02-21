@@ -1,4 +1,5 @@
-[![CI](https://github.com/twigly/rh/actions/workflows/ci.yml/badge.svg)](https://github.com/twigly/rh/actions/workflows/ci.yml) [![CD](https://github.com/twigly/rh/actions/workflows/cd.yml/badge.svg)](https://github.com/twigly/rh/actions/workflows/cd.yml)
+[![CI](https://github.com/twigly/rh/actions/workflows/ci.yml/badge.svg)](https://github.com/twigly/rh/actions/workflows/ci.yml)
+[![CD](https://github.com/twigly/rh/actions/workflows/cd.yml/badge.svg)](https://github.com/twigly/rh/actions/workflows/cd.yml)
 
 # rh: user-friendly command-line HTTP client
 
@@ -30,12 +31,8 @@ You can already use ```rh```, some features are not available yet. And new featu
 - [ ] Package manager
 - [ ] Multi URLs
 - [ ] Better help & version ([help & version](doc/help-and-version.md))
+- More [to do](doc/todo.md)
 
-For now, the priority is:
-
-- Aliases: done
-- Package manager: in progress
-- Self-signed SSL certificates: done (more SSL options in the future)
 
 # Don't repeat yourself
 
