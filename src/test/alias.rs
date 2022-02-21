@@ -25,6 +25,10 @@ pub fn create_alias_file(name: &str) {
 }
 
 pub fn create_alias_file_with_args(name: &str, args: &str) {
+    let app_config_path = app_config_directory_for_tests_only();
+    if !Path::exists(&app_config_path) {
+        fs::create_dir(app_config_path).expect("Cannot create the app config directory");
+    }
     let mut file = File::create(alias_filename(name)).expect("Cannot create the alias file");
     file.write_all(args.as_bytes()).expect("Cannot write content in the alias file");
 }
