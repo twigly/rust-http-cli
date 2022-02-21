@@ -1,5 +1,3 @@
-
-
 use httpmock::prelude::*;
 use rh::shell::{
     os::{DefaultOsDirs, OsDirs},
