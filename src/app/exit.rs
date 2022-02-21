@@ -14,7 +14,9 @@ pub fn code_on_error(err: Error) -> i32 {
         Error::ItemsAndRawMix => 200,
         Error::TooManyRaw => 201,
         Error::ContradictoryScheme => 301,
+        #[cfg(feature = "alias")]
         Error::AliasCommand(_) => 950,
+        #[cfg(feature = "alias")]
         Error::Alias(_) => 900,
         _ => 999,
     }
