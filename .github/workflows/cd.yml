@@ -7,7 +7,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  CARGO_TOML: Cargo.toml
+  CARGO_TOML: "crates/cli/Cargo.toml"
   BIN_NAME: rh
   ARCHIVE_LINUX_EXT: .tar.gz
   ARCHIVE_WINDOWS_EXT: .zip
