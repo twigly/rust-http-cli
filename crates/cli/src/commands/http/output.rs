@@ -15,7 +15,8 @@ pub fn render<OD: OsDirs, O: Write, E: Write>(shell: &mut Shell<OD, O, E>, ws: &
     if ws.output_redirected && !ws.flags.borrow().use_color {
         render_raw_content(ws, RefCell::new(response))?;
     } else {
-        let style_enabled = true;
+        let style_enabled = shell.enable_colors();
+
         let headers = ws.headers.borrow();
         let rf = RequestRender::new(ws, &headers, ws.theme.as_ref(), style_enabled);
         shell.out(rf)?;

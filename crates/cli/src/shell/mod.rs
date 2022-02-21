@@ -34,6 +34,13 @@ impl<'a, OD: OsDirs, O: Write, E: Write> Shell<'a, OD, O, E> {
         self.os_dirs
     }
 
+    pub fn enable_colors(&self) -> bool {
+        #[cfg(windows)]
+        ansi_term::enable_ansi_support();
+        #[cfg(not(windows))]
+        true
+    }
+
     // pub fn flush(&mut self) -> Result<()> {
     //     self.out.flush()?;
     //     self.err.flush()
