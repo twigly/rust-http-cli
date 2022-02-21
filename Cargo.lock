@@ -1408,7 +1408,7 @@ dependencies = [
 
 [[package]]
 name = "rh"
-version = "0.1.11"
+version = "0.1.12"
 dependencies = [
  "ansi_term",
  "atty",
