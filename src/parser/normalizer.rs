@@ -19,12 +19,7 @@ pub struct Normalizer {
 }
 
 impl Normalizer {
-    pub fn parse(
-        args: &[String],
-        output_redirected: bool,
-        default_scheme: &str,
-        default_host: &str,
-    ) -> Result<Normalizer, Error> {
+    pub fn parse(args: &[String], output_redirected: bool, default_scheme: &str, default_host: &str) -> Result<Normalizer, Error> {
         let mut method: Option<Method> = None;
         let mut urls: Vec<String> = Vec::new();
         let mut flags = Flags::new(output_redirected);
@@ -139,8 +134,7 @@ mod tests {
     macro_rules! assert_one_arg_url_eq {
         ($url:expr, $expected:expr) => {
             let args: Vec<String> = crate::args![$url];
-            let mut normalizer =
-                Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST).unwrap();
+            let mut normalizer = Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST).unwrap();
             assert!(normalizer.method() == Method::GET);
             assert_eq!(normalizer.urls.len(), 1);
             crate::assert_str_eq!(normalizer.urls[0], $expected);
@@ -155,8 +149,7 @@ mod tests {
         #[test]
         fn standard_method() {
             let args = crate::args!["HEAD", "localhost"];
-            let normalizer = Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST)
-                .expect("Cannot parse standard method");
+            let normalizer = Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST).expect("Cannot parse standard method");
             assert_eq!(normalizer.method, Some(Method::HEAD));
             assert_eq!(normalizer.urls.len(), 1);
         }
@@ -164,20 +157,15 @@ mod tests {
         #[test]
         fn custom_method() {
             let args = crate::args!["HELLO", "localhost"];
-            let normalizer = Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST)
-                .expect("Cannot parse custom method");
-            assert_eq!(
-                normalizer.method,
-                Some(Method::from_bytes(b"HELLO").unwrap())
-            );
+            let normalizer = Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST).expect("Cannot parse custom method");
+            assert_eq!(normalizer.method, Some(Method::from_bytes(b"HELLO").unwrap()));
             assert_eq!(normalizer.urls.len(), 1);
         }
 
         #[test]
         fn no_methods_because_lowercase() {
             let args = crate::args!["get", "localhost"];
-            let normalizer = Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST)
-                .expect("Cannot parse multi-urls");
+            let normalizer = Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST).expect("Cannot parse multi-urls");
             assert_eq!(normalizer.urls.len(), 2);
         }
     }
@@ -207,10 +195,7 @@ mod tests {
             let args = crate::args!["GET", "localhost"];
             let normalizer = Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST)?;
             assert_eq!(normalizer.urls.len(), 1);
-            crate::assert_str_eq!(
-                normalizer.urls[0],
-                format!("{}://localhost", DEFAULT_SCHEME)
-            );
+            crate::assert_str_eq!(normalizer.urls[0], format!("{}://localhost", DEFAULT_SCHEME));
             Ok(())
         }
 
@@ -219,10 +204,7 @@ mod tests {
             let args = crate::args!["GET", "localhost", "--headers"];
             let normalizer = Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST)?;
             assert_eq!(normalizer.urls.len(), 1);
-            crate::assert_str_eq!(
-                normalizer.urls[0],
-                format!("{}://localhost", DEFAULT_SCHEME)
-            );
+            crate::assert_str_eq!(normalizer.urls[0], format!("{}://localhost", DEFAULT_SCHEME));
             Ok(())
         }
 
@@ -231,10 +213,7 @@ mod tests {
             let args = crate::args!["localhost", "--headers"];
             let normalizer = Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST)?;
             assert_eq!(normalizer.urls.len(), 1);
-            crate::assert_str_eq!(
-                normalizer.urls[0],
-                format!("{}://localhost", DEFAULT_SCHEME)
-            );
+            crate::assert_str_eq!(normalizer.urls[0], format!("{}://localhost", DEFAULT_SCHEME));
             Ok(())
         }
     }
@@ -297,8 +276,7 @@ mod tests {
         #[test]
         fn raw_data() {
             let args: Vec<String> = crate::args!["test.com", "--raw=~data~"];
-            let mut normalizer =
-                Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST).unwrap();
+            let mut normalizer = Normalizer::parse(&args, false, DEFAULT_SCHEME, DEFAULT_HOST).unwrap();
             assert_eq!(normalizer.method(), Method::POST);
             assert_eq!(normalizer.urls.len(), 1);
             crate::assert_str_eq!(normalizer.urls[0], format!("{}://test.com", DEFAULT_SCHEME));
