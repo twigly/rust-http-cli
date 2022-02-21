@@ -88,6 +88,12 @@ jobs:
       run: echo "BIN_DIR=target/${{ matrix.target }}/release" >> $GITHUB_ENV
 
     - name: Strip
+      if: ${{ matrix.strip == 'aarch64-linux-gnu-strip' }}
+      run: sudo apt-get install binutils-aarch64-linux-gnu
+    - name: Strip
+      if: ${{ matrix.strip == 'arm-linux-gnueabihf-strip' }}
+      run: sudo apt-get install binutils-arm-linux-gnueabihf
+    - name: Strip
       if: ${{ matrix.strip }}
       run: ${{ matrix.strip }} $BIN_DIR/$BIN_NAME
 
