@@ -1,0 +1,14 @@
+[package]
+name = "rh_test"
+version = "0.1.0"
+edition = "2021"
+authors = ["twigly"]
+license = "MIT"
+description = "A user-friendly command-line tool to request HTTP APis"
+readme = "README.md"
+homepage = "https://github.com/twigly/rh"
+repository = "https://github.com/twigly/rh"
+keywords = ["cli", "http", "terminal", "tool", "devops"]
+categories = ["command-line-utilities"]
+
+[dependencies]

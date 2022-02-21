@@ -1,0 +1,36 @@
+[package]
+name = "rh"
+version = "0.1.8"
+edition = "2021"
+authors = ["twigly"]
+license = "MIT"
+description = "A user-friendly command-line tool to request HTTP APis"
+readme = "README.md"
+homepage = "https://github.com/twigly/rh"
+repository = "https://github.com/twigly/rh"
+keywords = ["cli", "http", "terminal", "tool", "devops"]
+categories = ["command-line-utilities"]
+
+[dependencies]
+ansi_term = "0.12"
+atty = "0.2.14"
+colored_json = "2"
+content_inspector = "0.2.4"
+dirs = "4.0"
+indicatif = "0.16"
+regex = "1.5.4"
+reqwest = { version = "0.11", default-features = false, features = ["blocking", "cookies", "gzip", "rustls-tls"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_urlencoded = "0.7.1"
+serde_json = { version = "1.0", features = ["preserve_order"] }
+termsize = "0.1"
+url = "2.2.2"
+# wild = { version = "2.0", optional = true }
+
+[dev-dependencies]
+httpmock = "0.6"
+rh_test = { path = "../test" }
+
+[features]
+spinner = []
+alias = []
