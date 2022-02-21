@@ -1,8 +1,8 @@
 # Tasks to do
 
-People are welcome to help on any of the following tasks for example.
+You're welcome to help on any of the following tasks for example.
 
-Everything that improves performance is welcome.
+Everything that improves performance is very welcome.
 
 ## Package manager
 
@@ -25,33 +25,38 @@ Everything that improves performance is welcome.
 
 - [ ] Comparison between ```cURL``` and ```rh```
 
-## Refactoring
-
-- [ ] Would it make sense to use ```hyper``` directly instead of ```reqwest```? Reasons would be:
-   - smaller dependency
-   - maybe a speed gain having code only specific to ```rh```
-   - there is no ```Client```, ```Request``` and ```Response``` traits in reqwest which is a problem for unit tests
-
 ## Features
 
-- [ ] Config system so it's possible to change the default values and create shortcuts [see configuration](configuration.md)
-- [ ] More options with SSL
+### Authentication / proxy
+
 - [ ] Deal with authentications [see authentication](authentication.md)
-- [ ] Deal with proxies (configs would allow to save proxy settings to not have to specify them all the time)
+- [ ] Deal with proxies
+
+### Items / headers
+
 - [ ] Recognise arrays in data items (ex: ```array=item1,item2,item3```)
 - [ ] Recognise files in data items (ex: ```file_content=@/path/file```)
-- [ ] Multi URLs
 - [ ] Remove headers with ```key:``` and set an empty value with ```"key: "```
-- [ ] Add an option ```--pretty=format``` to format without colouring
+- [ ] Read file content using the symbol ```@``` (for example ```--raw=@/path/file``` or ```key=@/path/file```)
+- [ ] Append URL parameters via items
+- [ ] Option to sort header and JSON keys (for example ```--sort``` to sort both of them, ```--sort=h``` to sort headers, ```--sort=j``` to sort JSON keys)
+
+### Content encoding
+
 - [ ] Read ```content-encoding=gzip``` (https://httpbin.org/gzip)
 - [ ] Read ```content-encoding=brotli``` (https://httpbin.org/brotli)
 - [ ] Read ```content-encoding=deflate``` (https://httpbin.org/deflate)
-- [ ] Read file content using the symbol ```@``` (for example ```--raw=@/path/file``` or ```key=@/path/file```)
-- [ ] Append URL parameters via items
+
+### Timeout / redirect
+
 - [ ] Set a max redirects
-- [ ] Show redirects if --verbose
 - [ ] Set a timeout
-- [ ] Option to sort header and JSON keys (for example ```--sort``` to sort both of them, ```--sort=h``` to sort headers, ```--sort=j``` to sort JSON keys)
+- [ ] Show redirects if --verbose
+
+### Misc
+
+- [ ] Multi URLs
+- [ ] Add an option ```--pretty=format``` to format without colouring
 - [ ] Specify cookies without using the ```cookies``` header (and avoid using ```"``` to escape the ```;``` separator) - maybe not worth (low priority)
 - [ ] Completion on available platforms
 
