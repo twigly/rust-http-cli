@@ -3,17 +3,17 @@ pub(crate) mod os;
 
 #[macro_export]
 macro_rules! args {
-        () => {{
-            let v = Vec::<String>::new();
-            v
-        }};
-        ($($elem:expr),+ $(,)?) => {{
-            let v = vec![
-                $( String::from($elem), )*
-            ];
-            v
-        }};
-    }
+    () => {{
+        let v = Vec::<String>::new();
+        v
+    }};
+    ($($elem:expr),+ $(,)?) => {{
+        let v = vec![
+            $( String::from($elem), )*
+        ];
+        v
+    }};
+}
 
 #[macro_export]
 macro_rules! arg_alias {
@@ -47,3 +47,5 @@ mod basics {
         assert_str_eq!(url.to_string(), url);
     }
 }
+
+pub use args;
