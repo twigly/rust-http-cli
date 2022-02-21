@@ -1,7 +1,7 @@
 mod form;
 mod json;
 
-use crate::core::{WorkspaceData, Workspace};
+use crate::core::{Workspace, WorkspaceData};
 use reqwest::blocking::RequestBuilder;
 
 pub trait Body {
