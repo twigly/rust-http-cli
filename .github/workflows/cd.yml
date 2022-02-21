@@ -51,63 +51,30 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # build: [linux-x86_64, linux-arm_32, macos-x86_64, win-msvc-x86_64, win-msvc-x86_32]
-        build: [linux-arm_32, macos-x86_64, win-msvc-x86_64, win-msvc-x86_32]
         include:
-        # error: failed to run custom build command for `ring v0.16.20`
-        # - build: linux-x86_64
-        #   os: ubuntu-20.04
-        #   rust: stable
-        #   target: x86_64-unknown-linux-musl
-        #   strip: strip
-        #   cross: false
-        - build: linux-arm_32
-          os: ubuntu-20.04
-          rust: stable
-          target: arm-unknown-linux-gnueabihf
-          strip: arm-linux-gnueabihf-strip
-          cross: true
-        # # Strip doesn't work
-        # - build: linux-arm_64
-        #   os: ubuntu-20.04
-        #   rust: stable
-        #   target: aarch64-unknown-linux-gnu
-        #   strip: aarch64-linux-gnu-strip
-        #   cross: false
-        - build: macos-x86_64
-          os: macos-latest
-          rust: stable
-          target: x86_64-apple-darwin
-          strip: strip
-          cross: true
-        - build: win-msvc-x86_64
-          os: windows-2019
-          rust: stable
-          target: x86_64-pc-windows-msvc
-          cross: true
-        - build: win-msvc-x86_32
-          os: windows-2019
-          rust: stable
-          target: i686-pc-windows-msvc
-          cross: true
+        - { plat: x86_64, os: ubuntu-20.04, target: x86_64-unknown-linux-gnu,     strip: strip}
+        - { plat: x86_64, os: ubuntu-20.04, target: x86_64-unknown-linux-musl,    strip: strip,                     cross: true}
+        - { plat: arm_64, os: ubuntu-20.04, target: aarch64-unknown-linux-gnu,    strip: aarch64-linux-gnu-strip,   cross: true}
+        - { plat: x86_32, os: ubuntu-20.04, target: i686-unknown-linux-musl,      strip: strip,                     cross: true}
+        - { plat: x86_32, os: ubuntu-20.04, target: i686-unknown-linux-gnu,       strip: strip,                     cross: true}
+        - { plat: arm_32, os: ubuntu-20.04, target: arm-unknown-linux-musleabihf, strip: arm-linux-gnueabihf-strip, cross: true}
+        - { plat: arm_32, os: ubuntu-20.04, target: arm-unknown-linux-gnueabihf,  strip: arm-linux-gnueabihf-strip, cross: true}
+        - { plat: x86_64, os: macos-latest, target: x86_64-apple-darwin,          strip: strip }
+        - { plat: x86_64, os: windows-2019, target: x86_64-pc-windows-gnu }
+        - { plat: x86_64, os: windows-2019, target: x86_64-pc-windows-msvc }
+        - { plat: x86_32, os: windows-2019, target: i686-pc-windows-msvc }
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
     
     - name: Toolchain
       uses: actions-rs/toolchain@v1
       with:
         profile: minimal
-        toolchain: ${{ matrix.rust }}
+        toolchain: stable
         target: ${{ matrix.target }}
         override: true
-
-#     - name: Test
-#       uses: actions-rs/cargo@v1
-#       with:
-#         use-cross: ${{ matrix.cross }}
-#         command: test
-#         args: --features alias --target ${{ matrix.target }}
 
     - name: Build
       uses: actions-rs/cargo@v1
@@ -120,17 +87,9 @@ jobs:
       shell: bash
       run: echo "BIN_DIR=target/${{ matrix.target }}/release" >> $GITHUB_ENV
 
-    - name: Strip (Linux & MacOS)
-      if: matrix.strip == 'strip'
-      run: strip $BIN_DIR/$BIN_NAME
-      
-    - name: Strip (ARM)
-      if: ${{ matrix.strip != '' && matrix.strip != 'strip' }}
-      run: |
-        docker run --rm -v "$PWD/target:/target:Z" \
-                           rustembedded/cross:${{ matrix.target }} \
-                           ${{ matrix.strip }} \
-                           $BIN_DIR/$BIN_NAME
+    - name: Strip
+      if: ${{ matrix.strip }}
+      run: ${{ matrix.strip }} $BIN_DIR/$BIN_NAME
 
     - name: Archive
       shell: bash
