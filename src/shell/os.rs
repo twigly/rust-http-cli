@@ -8,13 +8,8 @@ pub trait OsDirs {
     fn config_directory(&self) -> Option<PathBuf>;
 }
 
+#[derive(Default)]
 pub struct DefaultOsDirs;
-
-impl DefaultOsDirs {
-    pub fn new() -> Self {
-        Self {}
-    }
-}
 
 impl OsDirs for DefaultOsDirs {
     fn app_path(&self, filename: &str) -> Option<PathBuf> {

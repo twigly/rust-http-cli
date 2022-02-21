@@ -27,7 +27,7 @@ fn show_program() {
 fn show_directories() {
     use crate::shell::os::DefaultOsDirs;
 
-    let os_dirs = DefaultOsDirs::new();
+    let os_dirs = DefaultOsDirs::default();
     let mut config_dir_exists = false;
     match os_dirs.config_directory() {
         Some(path) => {
