@@ -31,7 +31,6 @@
 #         run: cargo publish --package rh
 
 
-
 name: Publish
 
 on:
