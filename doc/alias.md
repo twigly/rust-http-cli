@@ -4,10 +4,10 @@
 
 You can change ```rh``` default behaviour and create aliases you can reuse easily.
 
-To see a configuration, the syntax is:
+To see all the aliases available, the syntax is:
 
 ```bash
-> rh alias [@alias]
+> rh alias --list
 ```
 
 To update a configuration, the syntax is:
@@ -16,7 +16,7 @@ To update a configuration, the syntax is:
 > rh alias [@alias] <options>
 ```
 
-Please note that ```@alias``` is optional. If not specified it's ```default```. ```@alias``` must be lower-case.
+Please note that ```@alias``` is optional. If not specified it's the ```default``` alias. ```@alias``` must be lower-case.
 
 ```options``` can be any ```rh``` options.
 
@@ -40,26 +40,26 @@ Or the same but shorter:
 > rh alias -hc
 ```
 
-## Custom config
+## Custom alias
 
-You can create a config to show the ```-U```RL and method + to show the response ```-h```eaders + to show a ```-c```ompact response:
+You can create an alias to show the ```-U```RL and method + to show the response ```-h```eaders + to show a ```-c```ompact response:
 
 ```bash
 > rh alias @my-alias -Uhc
 ```
 
-## How to use a config
+## How to use an alias
 
-You can use the "my-alias" alias to show the URL, method, response headers, and compact the response body:
+You can use the "my-alias" alias created above to show the URL, method, response headers, and compact the response body:
 
 ```bash
-> rh @my-alias https://pie.dev/image/jpeg
+> rh @my-alias https://httpbin.org/image/jpeg
 ```
 
 You can use also the previous default alias that was built with the options ```-hc```:
 
 ```bash
-> rh https://pie.dev/image/jpeg
+> rh https://httpbin.org/image/jpeg
 ```
 
 ## Delete an alias
