@@ -184,30 +184,15 @@ mod tests {
     #[test]
     fn detect_numbers_from_str() {
         assert_eq!(Number::from_str("123"), Some(123u64.into()));
-        assert_eq!(
-            Number::from_str("18446744073709551615"),
-            Some(18446744073709551615u64.into())
-        );
-        assert_eq!(
-            Number::from_str("18446744073709551615118446744073709551615"),
-            Some(1.8446744073709552e40f64.into())
-        );
+        assert_eq!(Number::from_str("18446744073709551615"), Some(18446744073709551615u64.into()));
+        assert_eq!(Number::from_str("18446744073709551615118446744073709551615"), Some(1.8446744073709552e40f64.into()));
 
         assert_eq!(Number::from_str("-123"), Some((-123).into()));
-        assert_eq!(
-            Number::from_str("-9223372036854775807"),
-            Some((-9223372036854775807i64).into())
-        );
+        assert_eq!(Number::from_str("-9223372036854775807"), Some((-9223372036854775807i64).into()));
 
         assert_eq!(Number::from_str("123.456"), Some((123.456f64).into()));
-        assert_eq!(
-            Number::from_str("18446744073709551615.456"),
-            Some((18446744073709551615.456f64).into())
-        );
-        assert_eq!(
-            Number::from_str("123e10"),
-            Some((1230000000000.0f64).into())
-        );
+        assert_eq!(Number::from_str("18446744073709551615.456"), Some((18446744073709551615.456f64).into()));
+        assert_eq!(Number::from_str("123e10"), Some((1230000000000.0f64).into()));
 
         assert_eq!(Number::from_str("a123"), None);
         assert_eq!(Number::from_str("123.a"), None);
