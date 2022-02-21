@@ -62,7 +62,7 @@ impl<'a> ResponseRender<'a> {
         let theme = self.workspace.theme.response();
 
         let style = theme.version();
-        let message = format!("{:?} ", response.version(),);
+        let message = format!("{:?} ", response.version());
         self.write_with_style(writer, message.as_bytes(), &style)?;
 
         let style = theme.status();
