@@ -1,3 +1,5 @@
+[![CI](https://github.com/twigly/rh/actions/workflows/ci.yml/badge.svg)](https://github.com/twigly/rh/actions/workflows/ci.yml)
+
 # rh: user-friendly command-line HTTP client
 
 ```rh``` is a user-friendly, lightweight and performant command-line tool to request HTTP APis. You can debug, test and verify any HTTP APi with ```rh``` in a simple and efficient way. ```rh``` is focused on performance and stability. You don't need OpenSSL because ```rh``` is based on Rustls, a modern TLS library alternative to OpenSSL.
