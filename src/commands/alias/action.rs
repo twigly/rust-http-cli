@@ -12,11 +12,7 @@ pub enum Action {
 type IsValidAliasPtr = fn(arg: Option<&String>) -> bool;
 type FixAliasPtr = fn(alias_name: &str) -> String;
 
-pub fn get(
-    args: &mut Args,
-    is_valid_alias: IsValidAliasPtr,
-    fix_alias: FixAliasPtr,
-) -> Result<Action> {
+pub fn get(args: &mut Args, is_valid_alias: IsValidAliasPtr, fix_alias: FixAliasPtr) -> Result<Action> {
     if let Some(potential_subcommand) = args.first() {
         if is_delete(potential_subcommand, args, is_valid_alias, fix_alias)? {
             args.remove(0);
@@ -43,11 +39,7 @@ pub fn get(
 fn is_help(potential_subcommand: &str) -> Result<bool> {
     Ok(potential_subcommand == "--help" || potential_subcommand == "-h")
 }
-fn is_add(
-    potential_subcommand: &str,
-    args: &Args,
-    is_valid_alias: IsValidAliasPtr,
-) -> Result<bool> {
+fn is_add(potential_subcommand: &str, args: &Args, is_valid_alias: IsValidAliasPtr) -> Result<bool> {
     if potential_subcommand == "--add" {
         if args.len() == 1 || (args.len() == 2 && is_valid_alias(args.get(1))) {
             return Err(Error::MissingArgsForAdd);
@@ -57,12 +49,7 @@ fn is_add(
     }
     Ok(false)
 }
-fn is_delete(
-    potential_subcommand: &str,
-    args: &Args,
-    is_valid_alias: IsValidAliasPtr,
-    fix_alias: FixAliasPtr,
-) -> Result<bool> {
+fn is_delete(potential_subcommand: &str, args: &Args, is_valid_alias: IsValidAliasPtr, fix_alias: FixAliasPtr) -> Result<bool> {
     if potential_subcommand == "--delete" || potential_subcommand == "--del" {
         if args.len() == 1 || (args.len() == 2 && is_valid_alias(args.get(1))) {
             Ok(true)
@@ -159,20 +146,14 @@ mod tests {
         let mut args = args!["--delete", "arg-ABC"];
         let res = get(&mut args, is_valid, fix_alias_name);
         assert!(res.is_err());
-        assert_eq!(
-            res.unwrap_err(),
-            Error::TooManyArgsForDelete("arg-abc".into())
-        );
+        assert_eq!(res.unwrap_err(), Error::TooManyArgsForDelete("arg-abc".into()));
     }
     #[test]
     fn invalid_delete_subcommand_lowercase() {
         let mut args = args!["--del", "arg-123"];
         let res = get(&mut args, is_valid, fix_alias_name);
         assert!(res.is_err());
-        assert_eq!(
-            res.unwrap_err(),
-            Error::TooManyArgsForDelete("arg-123".into())
-        );
+        assert_eq!(res.unwrap_err(), Error::TooManyArgsForDelete("arg-123".into()));
     }
 
     #[test]
@@ -180,10 +161,7 @@ mod tests {
         let mut args = args!["--del", arg_alias!("an-alias"), "arg-123"];
         let res = get(&mut args, is_valid, fix_alias_name);
         assert!(res.is_err());
-        assert_eq!(
-            res.unwrap_err(),
-            Error::TooManyArgsForDelete("an-alias".into())
-        );
+        assert_eq!(res.unwrap_err(), Error::TooManyArgsForDelete("an-alias".into()));
     }
 
     #[test]
