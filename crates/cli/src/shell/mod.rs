@@ -36,7 +36,7 @@ impl<'a, OD: OsDirs, O: Write, E: Write> Shell<'a, OD, O, E> {
 
     pub fn enable_colors(&self) -> bool {
         #[cfg(windows)]
-        ansi_term::enable_ansi_support();
+        return ansi_term::enable_ansi_support().is_ok();
         #[cfg(not(windows))]
         true
     }
