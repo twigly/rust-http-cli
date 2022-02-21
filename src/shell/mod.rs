@@ -1,7 +1,7 @@
 pub(crate) mod error;
 pub(crate) mod form;
 pub(crate) mod json;
-pub(crate) mod os;
+pub mod os;
 pub(crate) mod stream;
 
 use self::os::OsDirs;
