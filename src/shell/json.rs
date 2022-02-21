@@ -13,11 +13,7 @@ pub struct JsonRender<'a, T> {
 
 impl<'a, T: Serialize> JsonRender<'a, T> {
     pub fn new(value: &'a T, compact: bool, style_enabled: bool) -> Self {
-        Self {
-            value,
-            compact,
-            style_enabled,
-        }
+        Self { value, compact, style_enabled }
     }
 }
 
