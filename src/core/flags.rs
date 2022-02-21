@@ -24,4 +24,3 @@ pub struct Flags {
     pub show_response_compact: bool,
     pub show_response_body: bool,
 }
-
