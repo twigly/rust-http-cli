@@ -97,10 +97,10 @@ fn alias_name(args: &mut Args) -> Result<String> {
 mod tests {
     use super::*;
     use crate::commands::alias::error::ErrorKind;
+    use crate::commands::Command;
     use crate::core::{Error as CoreError, Result};
     use crate::test::alias::*;
     use crate::test::os::{TestInvalidOsDirs, TestNoOsDirs, TestValidOsDirs};
-    use crate::{arg_alias, args, commands::Command};
 
     mod basic {
         use super::*;
@@ -129,7 +129,7 @@ mod tests {
         fn error_if_no_args_for_default_alias() {
             setup();
 
-            let mut args = args!["alias"];
+            let mut args = rh_test::args!["alias"];
             let os_dirs = TestValidOsDirs::new();
             let mut shell = Shell::new(&os_dirs, Vec::new(), Vec::new());
             let command = AliasCommand {};
@@ -140,7 +140,7 @@ mod tests {
         #[test]
         fn error_if_no_args_for_custom_alias() {
             setup();
-            let mut args = args!["alias", arg_alias!(CUSTOM_ALIAS_NAME_2)];
+            let mut args = rh_test::args!["alias", rh_test::arg_alias!(CUSTOM_ALIAS_NAME_2)];
             let os_dirs = TestValidOsDirs::new();
             let mut shell = Shell::new(&os_dirs, Vec::new(), Vec::new());
             let command = AliasCommand {};
@@ -165,7 +165,7 @@ mod tests {
             use super::*;
 
             fn test_default_alias_with<OD: OsDirs>(os_dirs: OD, url: &str) -> Result<Args> {
-                test_alias_with(os_dirs, DEFAULT_ALIAS_NAME, args!["alias", url.clone()])
+                test_alias_with(os_dirs, DEFAULT_ALIAS_NAME, rh_test::args!["alias", url.clone()])
             }
             #[test]
             fn default_alias() {
@@ -197,7 +197,7 @@ mod tests {
             use super::*;
 
             fn test_custom_alias<OD: OsDirs>(os_dirs: OD, url: &str) -> Result<Args> {
-                test_alias_with(os_dirs, CUSTOM_ALIAS_NAME_1, args!["alias", arg_alias!(CUSTOM_ALIAS_NAME_1), url.clone()])
+                test_alias_with(os_dirs, CUSTOM_ALIAS_NAME_1, rh_test::args!["alias", rh_test::arg_alias!(CUSTOM_ALIAS_NAME_1), url.clone()])
             }
 
             #[test]
@@ -245,7 +245,7 @@ mod tests {
             use super::*;
 
             fn list_alias_with<OD: OsDirs>(os_dirs: OD) -> Result<Args> {
-                delete_alias_with(os_dirs, DEFAULT_ALIAS_NAME, args!["alias", "--list"])
+                delete_alias_with(os_dirs, DEFAULT_ALIAS_NAME, rh_test::args!["alias", "--list"])
             }
 
             #[test]
@@ -273,7 +273,7 @@ mod tests {
             use super::*;
 
             fn delete_default_alias_with<OD: OsDirs>(os_dirs: OD) -> Result<Args> {
-                delete_alias_with(os_dirs, DEFAULT_ALIAS_NAME, args!["alias", "--delete"])
+                delete_alias_with(os_dirs, DEFAULT_ALIAS_NAME, rh_test::args!["alias", "--delete"])
             }
 
             #[test]
@@ -307,7 +307,7 @@ mod tests {
             use super::*;
 
             fn delete_custom_alias_with<OD: OsDirs>(os_dirs: OD) -> Result<Args> {
-                delete_alias_with(os_dirs, CUSTOM_ALIAS_NAME_1, args!["alias", "--delete", arg_alias!(CUSTOM_ALIAS_NAME_1)])
+                delete_alias_with(os_dirs, CUSTOM_ALIAS_NAME_1, rh_test::args!["alias", "--delete", rh_test::arg_alias!(CUSTOM_ALIAS_NAME_1)])
             }
 
             #[test]
@@ -345,7 +345,7 @@ mod tests {
         fn error_delete_default_alias() {
             setup();
 
-            let mut args = args!["alias", "--delete", "aBcD"];
+            let mut args = rh_test::args!["alias", "--delete", "aBcD"];
             let os_dirs = TestValidOsDirs::new();
             let mut shell = Shell::new(&os_dirs, Vec::new(), Vec::new());
             let command = AliasCommand {};
@@ -358,7 +358,7 @@ mod tests {
         fn error_delete_custom_alias() {
             setup();
 
-            let mut args = args!["alias", "--delete", arg_alias!(CUSTOM_ALIAS_NAME_1), "def"];
+            let mut args = rh_test::args!["alias", "--delete", rh_test::arg_alias!(CUSTOM_ALIAS_NAME_1), "def"];
             let os_dirs = TestValidOsDirs::new();
             let mut shell = Shell::new(&os_dirs, Vec::new(), Vec::new());
             let command = AliasCommand {};

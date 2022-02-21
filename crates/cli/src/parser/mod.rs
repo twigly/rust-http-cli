@@ -118,28 +118,28 @@ mod tests {
 
         #[test]
         fn show_version() {
-            let args = crate::args!["--version"];
+            let args = rh_test::args!["--version"];
             let parser = execute(&args).unwrap();
             assert_eq!(parser.flags.show_version, true);
         }
 
         // #[test]
         // fn show_short_version() {
-        //     let args = crate::args!["-v"];
+        //     let args = rh_test::args!["-v"];
         //     let parser = execute(&args).unwrap();
         //     assert_eq!(parser.flags.show_short_version, true);
         // }
 
         #[test]
         fn show_help() {
-            let args = crate::args!["--help"];
+            let args = rh_test::args!["--help"];
             let parser = execute(&args).unwrap();
             assert_eq!(parser.flags.show_help, true);
         }
 
         #[test]
         fn show_short_help() {
-            let args = crate::args!["-h"];
+            let args = rh_test::args!["-h"];
             let parser = execute(&args).unwrap();
             assert_eq!(parser.flags.show_short_help, true);
         }
@@ -165,7 +165,7 @@ mod tests {
 
         #[test]
         fn error_if_no_args() {
-            let args = crate::args![];
+            let args = rh_test::args![];
             let parser = validate_there_are_enough_args(&args);
             assert!(parser.is_err());
             assert_eq!(parser.unwrap_err(), Error::NoArgs);
@@ -173,14 +173,14 @@ mod tests {
 
         #[test]
         fn basic_validation_if_multi_args() {
-            let args = crate::args!["GET", "localhost"];
+            let args = rh_test::args!["GET", "localhost"];
             let parser = validate_there_are_enough_args(&args);
             assert!(parser.is_ok());
         }
 
         #[test]
         fn error_if_no_urls() {
-            let args = crate::args![];
+            let args = rh_test::args![];
             let flags = Flags::default();
             let parser = validate_processed_urls(&[], &flags, &args);
             assert!(parser.is_err());
@@ -189,9 +189,9 @@ mod tests {
 
         #[test]
         fn validate_if_one_url() {
-            let args = crate::args!["test.com"];
+            let args = rh_test::args!["test.com"];
             let flags = Flags::default();
-            let urls = crate::args!["test.com"];
+            let urls = rh_test::args!["test.com"];
             let parser = validate_processed_urls(&urls, &flags, &args);
             assert!(parser.is_ok());
         }
@@ -254,36 +254,36 @@ mod tests {
 
         #[test]
         fn hostname_only() {
-            let args = crate::args!["localhost"];
+            let args = rh_test::args!["localhost"];
             let parser = execute(&args).unwrap();
             assert_eq!(parser.urls.len(), 1);
-            crate::assert_str_eq!(parser.urls[0], "http://localhost");
+            rh_test::assert_str_eq!(parser.urls[0], "http://localhost");
         }
 
         #[test]
         fn method_and_hostname() {
-            let args = crate::args!["GET", "localhost"];
+            let args = rh_test::args!["GET", "localhost"];
             let parser = execute(&args).unwrap();
             assert_eq!(parser.urls.len(), 1);
-            crate::assert_str_eq!(parser.urls[0], "http://localhost");
+            rh_test::assert_str_eq!(parser.urls[0], "http://localhost");
         }
 
         #[test]
         fn method_and_hostname_and_flag() {
-            let args = crate::args!["GET", "localhost", "--headers"];
+            let args = rh_test::args!["GET", "localhost", "--headers"];
             let parser = execute(&args).unwrap();
             assert_eq!(parser.urls.len(), 1);
-            crate::assert_str_eq!(parser.urls[0], "http://localhost");
+            rh_test::assert_str_eq!(parser.urls[0], "http://localhost");
             assert_eq!(parser.flags.show_request_headers, true);
             assert_eq!(parser.flags.show_response_headers, true);
         }
 
         #[test]
         fn detect_obvious_url() {
-            let args = crate::args!["GET", "--url", "http://test.com", "--headers"];
+            let args = rh_test::args!["GET", "--url", "http://test.com", "--headers"];
             let parser = execute(&args).unwrap();
             assert_eq!(parser.urls.len(), 1);
-            crate::assert_str_eq!(parser.urls[0], "http://test.com");
+            rh_test::assert_str_eq!(parser.urls[0], "http://test.com");
             assert_eq!(parser.flags.show_request_url, true);
             assert_eq!(parser.flags.show_request_headers, true);
             assert_eq!(parser.flags.show_response_headers, true);
@@ -291,10 +291,10 @@ mod tests {
 
         #[test]
         fn error_if_multi_args_including_method_but_method_at_wrong_place() {
-            let args = crate::args!["GET", "--url", "--headers", "https://test.com"];
+            let args = rh_test::args!["GET", "--url", "--headers", "https://test.com"];
             let parser = execute(&args).unwrap();
             assert_eq!(parser.urls.len(), 1);
-            crate::assert_str_eq!(parser.urls[0], "https://test.com");
+            rh_test::assert_str_eq!(parser.urls[0], "https://test.com");
             assert_eq!(parser.flags.show_request_url, true);
             assert_eq!(parser.flags.show_request_headers, true);
             assert_eq!(parser.flags.show_response_headers, true);
@@ -302,7 +302,7 @@ mod tests {
 
         #[test]
         fn error_if_one_arg_but_no_url() {
-            let args: Vec<String> = crate::args!["--url"];
+            let args: Vec<String> = rh_test::args!["--url"];
             let parser = execute(&args);
             assert!(parser.is_err());
             assert_eq!(parser.unwrap_err(), Error::MissingUrl);
@@ -310,7 +310,7 @@ mod tests {
 
         #[test]
         fn error_if_multi_args_but_no_url() {
-            let args = crate::args!["--url", "--headers"];
+            let args = rh_test::args!["--url", "--headers"];
             let parser = execute(&args);
             assert!(parser.is_err());
             assert_eq!(parser.unwrap_err(), Error::MissingUrl);
@@ -318,7 +318,7 @@ mod tests {
 
         #[test]
         fn error_if_multi_args_including_method_but_no_url() {
-            let args = crate::args!["GET", "--url", "--headers"];
+            let args = rh_test::args!["GET", "--url", "--headers"];
             let parser = execute(&args);
             assert!(parser.is_err());
             assert_eq!(parser.unwrap_err(), Error::MissingUrl);
@@ -330,7 +330,7 @@ mod tests {
 
         #[test]
         fn error_if_raw_data_and_json() {
-            let args: Vec<String> = crate::args!["test.com", "--raw=data", "key=value"];
+            let args: Vec<String> = rh_test::args!["test.com", "--raw=data", "key=value"];
             let parser = execute(&args);
             assert!(parser.is_err());
             assert_eq!(parser.unwrap_err(), Error::ItemsAndRawMix);

@@ -51,7 +51,7 @@ mod tests {
     use super::*;
     use crate::commands::alias::storage::DEFAULT_ALIAS_NAME;
     use crate::test::alias::*;
-    use crate::{arg_alias, args, test::os::TestValidOsDirs};
+    use crate::test::os::TestValidOsDirs;
 
     #[test]
     fn default_alias() {
@@ -60,7 +60,7 @@ mod tests {
         create_alias_file(DEFAULT_ALIAS_NAME);
         assert!(alias_exists(DEFAULT_ALIAS_NAME));
 
-        let mut args = args!["-cuh", "http://test.com"];
+        let mut args = rh_test::args!["-cuh", "http://test.com"];
         let _: Box<dyn Command<TestValidOsDirs, &mut Vec<u8>, &mut Vec<u8>>> = args.command(&TestValidOsDirs::new()).expect("Cannot execute default_alias");
         assert_eq!(args, vec!["-v", "-c", "-cuh", "http://test.com"]);
     }
@@ -72,7 +72,7 @@ mod tests {
         create_empty_alias_file(EMPTY_ALIAS_NAME);
         assert!(alias_exists(EMPTY_ALIAS_NAME));
 
-        let mut args = args![arg_alias!(EMPTY_ALIAS_NAME), "-cuh", "http://test.com"];
+        let mut args = rh_test::args![rh_test::arg_alias!(EMPTY_ALIAS_NAME), "-cuh", "http://test.com"];
         let _: Box<dyn Command<TestValidOsDirs, &mut Vec<u8>, &mut Vec<u8>>> = args.command(&TestValidOsDirs::new()).expect("Cannot execute empty_alias");
         assert_eq!(args, vec!["-cuh", "http://test.com"]);
     }
@@ -84,7 +84,7 @@ mod tests {
         create_alias_file_with_args(CUSTOM_ALIAS_NAME_1, "-cUs");
         assert!(alias_exists(CUSTOM_ALIAS_NAME_1));
 
-        let mut args = args![arg_alias!(CUSTOM_ALIAS_NAME_1), "-cUh", "http://test.com"];
+        let mut args = rh_test::args![rh_test::arg_alias!(CUSTOM_ALIAS_NAME_1), "-cUh", "http://test.com"];
         let _: Box<dyn Command<TestValidOsDirs, &mut Vec<u8>, &mut Vec<u8>>> = args.command(&TestValidOsDirs::new()).unwrap();
         assert_eq!(args, vec!["-cUs", "-cUh", "http://test.com"]);
     }
@@ -96,14 +96,14 @@ mod tests {
         create_alias_file_with_args(CUSTOM_ALIAS_NAME_2, "-UhH\nX-Key:Val");
         assert!(alias_exists(CUSTOM_ALIAS_NAME_2));
 
-        let mut args = args![arg_alias!(CUSTOM_ALIAS_NAME_2), "-cUh", "http://test.com"];
+        let mut args = rh_test::args![rh_test::arg_alias!(CUSTOM_ALIAS_NAME_2), "-cUh", "http://test.com"];
         let _: Box<dyn Command<TestValidOsDirs, &mut Vec<u8>, &mut Vec<u8>>> = args.command(&TestValidOsDirs::new()).unwrap();
         assert_eq!(args, vec!["-UhH", "X-Key:Val", "-cUh", "http://test.com"]);
     }
 
     #[test]
     fn error_config() {
-        let mut args = args![arg_alias!("error"), "-cuh", "http://test.com"];
+        let mut args = rh_test::args![rh_test::arg_alias!("error"), "-cuh", "http://test.com"];
         let res: Result<Box<dyn Command<TestValidOsDirs, &mut Vec<u8>, &mut Vec<u8>>>> = args.command(&TestValidOsDirs::new());
         assert!(res.is_err());
         // FIXME Checks the error

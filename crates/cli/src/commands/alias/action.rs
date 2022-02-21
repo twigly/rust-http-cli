@@ -78,7 +78,7 @@ fn is_list(potential_subcommand: &str, args: &Args) -> Result<bool> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{arg_alias, args, commands::ALIAS_NAME_PREFIX};
+    use crate::commands::ALIAS_NAME_PREFIX;
 
     fn is_valid(arg: Option<&String>) -> bool {
         match arg {
@@ -97,7 +97,7 @@ mod tests {
 
     #[test]
     fn no_subcommand() {
-        let mut args = args![];
+        let mut args = rh_test::args![];
         let res = get(&mut args, is_valid, fix_alias_name);
         assert!(res.is_err());
         assert_eq!(res.unwrap_err(), Error::NoArgs);
@@ -105,7 +105,7 @@ mod tests {
 
     #[test]
     fn invalid_add_subcommand_default_alias() {
-        let mut args = args!["--add"];
+        let mut args = rh_test::args!["--add"];
         let res = get(&mut args, is_valid, fix_alias_name);
         assert!(res.is_err());
         assert_eq!(res.unwrap_err(), Error::MissingArgsForAdd);
@@ -113,7 +113,7 @@ mod tests {
 
     #[test]
     fn invalid_add_subcommand_custom_alias() {
-        let mut args = args!["--add", arg_alias!("an-alias")];
+        let mut args = rh_test::args!["--add", rh_test::arg_alias!("an-alias")];
         let res = get(&mut args, is_valid, fix_alias_name);
         assert!(res.is_err());
         assert_eq!(res.unwrap_err(), Error::MissingArgsForAdd);
@@ -121,36 +121,36 @@ mod tests {
 
     #[test]
     fn add_subcommand_default_alias() {
-        let mut args = args!["--add", "-v"];
+        let mut args = rh_test::args!["--add", "-v"];
         let subcommand = get(&mut args, is_valid, fix_alias_name).unwrap();
         assert_eq!(subcommand, Action::Add);
 
-        let mut args = args!["whatever"];
+        let mut args = rh_test::args!["whatever"];
         let subcommand = get(&mut args, is_valid, fix_alias_name).unwrap();
         assert_eq!(subcommand, Action::Add);
     }
 
     #[test]
     fn add_subcommand_custom_alias() {
-        let mut args = args!["--add", arg_alias!("an-alias"), "-v"];
+        let mut args = rh_test::args!["--add", rh_test::arg_alias!("an-alias"), "-v"];
         let subcommand = get(&mut args, is_valid, fix_alias_name).unwrap();
         assert_eq!(subcommand, Action::Add);
 
-        let mut args = args![arg_alias!("an-alias"), "whatever"];
+        let mut args = rh_test::args![rh_test::arg_alias!("an-alias"), "whatever"];
         let subcommand = get(&mut args, is_valid, fix_alias_name).unwrap();
         assert_eq!(subcommand, Action::Add);
     }
 
     #[test]
     fn invalid_delete_subcommand_uppercase() {
-        let mut args = args!["--delete", "arg-ABC"];
+        let mut args = rh_test::args!["--delete", "arg-ABC"];
         let res = get(&mut args, is_valid, fix_alias_name);
         assert!(res.is_err());
         assert_eq!(res.unwrap_err(), Error::TooManyArgsForDelete("arg-abc".into()));
     }
     #[test]
     fn invalid_delete_subcommand_lowercase() {
-        let mut args = args!["--del", "arg-123"];
+        let mut args = rh_test::args!["--del", "arg-123"];
         let res = get(&mut args, is_valid, fix_alias_name);
         assert!(res.is_err());
         assert_eq!(res.unwrap_err(), Error::TooManyArgsForDelete("arg-123".into()));
@@ -158,7 +158,7 @@ mod tests {
 
     #[test]
     fn invalid_delete_subcommand_error_without_prefix() {
-        let mut args = args!["--del", arg_alias!("an-alias"), "arg-123"];
+        let mut args = rh_test::args!["--del", rh_test::arg_alias!("an-alias"), "arg-123"];
         let res = get(&mut args, is_valid, fix_alias_name);
         assert!(res.is_err());
         assert_eq!(res.unwrap_err(), Error::TooManyArgsForDelete("an-alias".into()));
@@ -166,29 +166,29 @@ mod tests {
 
     #[test]
     fn delete_subcommand_default_alias() {
-        let mut args = args!["--delete"];
+        let mut args = rh_test::args!["--delete"];
         let subcommand = get(&mut args, is_valid, fix_alias_name).unwrap();
         assert_eq!(subcommand, Action::Delete);
 
-        let mut args = args!["--del"];
+        let mut args = rh_test::args!["--del"];
         let subcommand = get(&mut args, is_valid, fix_alias_name).unwrap();
         assert_eq!(subcommand, Action::Delete);
     }
 
     #[test]
     fn delete_subcommand_custom_alias() {
-        let mut args = args!["--delete", arg_alias!("an-alias")];
+        let mut args = rh_test::args!["--delete", rh_test::arg_alias!("an-alias")];
         let subcommand = get(&mut args, is_valid, fix_alias_name).unwrap();
         assert_eq!(subcommand, Action::Delete);
 
-        let mut args = args!["--del", arg_alias!("an-alias")];
+        let mut args = rh_test::args!["--del", rh_test::arg_alias!("an-alias")];
         let subcommand = get(&mut args, is_valid, fix_alias_name).unwrap();
         assert_eq!(subcommand, Action::Delete);
     }
 
     #[test]
     fn invalid_list_subcommand() {
-        let mut args = args!["--list", "too-many-args"];
+        let mut args = rh_test::args!["--list", "too-many-args"];
         let res = get(&mut args, is_valid, fix_alias_name);
         assert!(res.is_err());
         assert_eq!(res.unwrap_err(), Error::TooManyArgsForList);
@@ -196,29 +196,29 @@ mod tests {
 
     #[test]
     fn list_subcommand() {
-        let mut args = args!["--list"];
+        let mut args = rh_test::args!["--list"];
         let subcommand = get(&mut args, is_valid, fix_alias_name).unwrap();
         assert_eq!(subcommand, Action::List);
     }
 
     #[test]
     fn help_subcommand_strict() {
-        let mut args = args!["--help"];
+        let mut args = rh_test::args!["--help"];
         let subcommand = get(&mut args, is_valid, fix_alias_name).unwrap();
         assert_eq!(subcommand, Action::Help);
 
-        let mut args = args!["-h"];
+        let mut args = rh_test::args!["-h"];
         let subcommand = get(&mut args, is_valid, fix_alias_name).unwrap();
         assert_eq!(subcommand, Action::Help);
     }
 
     #[test]
     fn help_subcommand_flexible() {
-        let mut args = args!["--help", "blabla"];
+        let mut args = rh_test::args!["--help", "blabla"];
         let subcommand = get(&mut args, is_valid, fix_alias_name).unwrap();
         assert_eq!(subcommand, Action::Help);
 
-        let mut args = args!["-h", "blabla"];
+        let mut args = rh_test::args!["-h", "blabla"];
         let subcommand = get(&mut args, is_valid, fix_alias_name).unwrap();
         assert_eq!(subcommand, Action::Help);
     }
