@@ -24,16 +24,8 @@ impl fmt::Display for Error {
             Error::ItemsAndRawMix => write!(f, "not possible to mix raw data and key=value items."),
             Error::TooManyRaw => write!(f, "only one raw data item is allowed."),
             Error::ContradictoryScheme => write!(f, "either http or https."),
-            Error::Unexpected(err) => write!(
-                f,
-                "found argument '{}' which wasn't expected, or isn't valid in this context.",
-                err
-            ),
-            Error::InvalidFlag(args) => write!(
-                f,
-                "found argument '{}' which wasn't expected, or isn't valid in this context.",
-                args
-            ),
+            Error::Unexpected(err) => write!(f, "found argument '{}' which wasn't expected, or isn't valid in this context.", err),
+            Error::InvalidFlag(args) => write!(f, "found argument '{}' which wasn't expected, or isn't valid in this context.", args),
             Error::InvalidHeader(err) => write!(f, "invalid header '{}'.", err),
             Error::InvalidItem(err) => write!(f, "invalid item '{}'.", err),
             Error::BadHeaderName(_) => write!(f, "invalid header name."),
@@ -43,32 +35,18 @@ impl fmt::Display for Error {
             #[cfg(feature = "alias")]
             Error::AliasCommand(err) => {
                 writeln!(f, "the alias subcommand failed, {}", err)?;
-                write!(
-                    f,
-                    "try '{} {} --help' for more information.",
-                    rh_name!(),
-                    crate::commands::alias::COMMAND_ALIAS
-                )
+                write!(f, "try '{} {} --help' for more information.", rh_name!(), crate::commands::alias::COMMAND_ALIAS)
             }
             #[cfg(feature = "alias")]
             Error::Alias(err) => {
                 writeln!(f, "cannot find the alias '{}'", err)?;
-                write!(
-                    f,
-                    "try '{} {} --help' for more information.",
-                    rh_name!(),
-                    crate::commands::alias::COMMAND_ALIAS
-                )
+                write!(f, "try '{} {} --help' for more information.", rh_name!(), crate::commands::alias::COMMAND_ALIAS)
             }
             #[cfg(feature = "alias")]
-            Error::AliasOther => {  // FIXME To be removed
+            Error::AliasOther => {
+                // FIXME To be removed
                 writeln!(f, "unknown error with alias")?;
-                write!(
-                    f,
-                    "try '{} {} --help' for more information.",
-                    rh_name!(),
-                    crate::commands::alias::COMMAND_ALIAS
-                )
+                write!(f, "try '{} {} --help' for more information.", rh_name!(), crate::commands::alias::COMMAND_ALIAS)
             }
         }
     }
