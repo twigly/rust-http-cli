@@ -70,7 +70,11 @@ impl<'a> RequestRender<'a> {
         let ws = self.workspace;
         let urls: &[String] = &ws.urls;
 
-        self.write_with_style(writer, if urls.len() > self.req_number { &urls[self.req_number] } else { "??" }.as_bytes(), &self.theme.request().url())
+        self.write_with_style(
+            writer,
+            if urls.len() > self.req_number { &urls[self.req_number] } else { "??" }.as_bytes(),
+            &self.theme.request().url(),
+        )
     }
 
     #[inline]
