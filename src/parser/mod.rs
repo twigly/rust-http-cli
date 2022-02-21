@@ -82,11 +82,7 @@ fn validate_processed_urls(urls: &[String], flags: &Flags, args: &[String]) -> R
 }
 
 #[inline]
-fn validate_there_is_no_mix_of_items_and_raw_and_stdin(
-    items: &Items,
-    raw: &Option<String>,
-    input_redirected: bool,
-) -> Result<()> {
+fn validate_there_is_no_mix_of_items_and_raw_and_stdin(items: &Items, raw: &Option<String>, input_redirected: bool) -> Result<()> {
     if (!items.is_empty()) as u8 + raw.is_some() as u8 + input_redirected as u8 > 1 {
         Err(Error::ItemsAndRawMix)
     } else {
@@ -204,11 +200,7 @@ mod tests {
         fn raw_data_only() {
             let items = Items::new();
             let raw_data = Some("hello".into());
-            let parser = validate_there_is_no_mix_of_items_and_raw_and_stdin(
-                &items,
-                &raw_data,
-                NO_STDIN_DATA,
-            );
+            let parser = validate_there_is_no_mix_of_items_and_raw_and_stdin(&items, &raw_data, NO_STDIN_DATA);
             assert!(parser.is_ok());
         }
 
@@ -216,16 +208,14 @@ mod tests {
         fn key_value_only() {
             let mut items = Items::new();
             let _ = items.push("key=value");
-            let parser =
-                validate_there_is_no_mix_of_items_and_raw_and_stdin(&items, &None, NO_STDIN_DATA);
+            let parser = validate_there_is_no_mix_of_items_and_raw_and_stdin(&items, &None, NO_STDIN_DATA);
             assert!(parser.is_ok());
         }
 
         #[test]
         fn stdin_only() {
             let items = Items::new();
-            let parser =
-                validate_there_is_no_mix_of_items_and_raw_and_stdin(&items, &None, STDIN_DATA);
+            let parser = validate_there_is_no_mix_of_items_and_raw_and_stdin(&items, &None, STDIN_DATA);
             assert!(parser.is_ok());
         }
 
@@ -233,8 +223,7 @@ mod tests {
         fn error_if_mix_raw_and_stdin() {
             let items = Items::new();
             let raw_data = Some("hello".into());
-            let parser =
-                validate_there_is_no_mix_of_items_and_raw_and_stdin(&items, &raw_data, STDIN_DATA);
+            let parser = validate_there_is_no_mix_of_items_and_raw_and_stdin(&items, &raw_data, STDIN_DATA);
             assert!(parser.is_err());
             assert_eq!(parser.unwrap_err(), Error::ItemsAndRawMix);
         }
@@ -244,11 +233,7 @@ mod tests {
             let mut items = Items::new();
             items.push("key=value").expect("Cannot add key/value item");
             let raw_data = Some("hello".into());
-            let parser = validate_there_is_no_mix_of_items_and_raw_and_stdin(
-                &items,
-                &raw_data,
-                NO_STDIN_DATA,
-            );
+            let parser = validate_there_is_no_mix_of_items_and_raw_and_stdin(&items, &raw_data, NO_STDIN_DATA);
             assert!(parser.is_err());
             assert_eq!(parser.unwrap_err(), Error::ItemsAndRawMix);
         }
@@ -258,8 +243,7 @@ mod tests {
             let mut items = Items::new();
             items.push("key=value").expect("Cannot add key/value item");
             let raw_data = Some("hello".into());
-            let parser =
-                validate_there_is_no_mix_of_items_and_raw_and_stdin(&items, &raw_data, STDIN_DATA);
+            let parser = validate_there_is_no_mix_of_items_and_raw_and_stdin(&items, &raw_data, STDIN_DATA);
             assert!(parser.is_err());
             assert_eq!(parser.unwrap_err(), Error::ItemsAndRawMix);
         }
