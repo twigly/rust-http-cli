@@ -18,14 +18,20 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
         rust: [stable]
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
+
     - name: Lint
       if: matrix.os == 'ubuntu-latest'
       run: cargo clippy --features alias -- -D warnings
+
     - name: Format
+      continue-on-error: true
       if: matrix.os == 'ubuntu-latest'
       run: cargo fmt -- --check
+
     - name: Build
       run: cargo build --verbose --features alias
+
     - name: Unit tests
       run: cargo test --verbose --features alias -- --test-threads=1
