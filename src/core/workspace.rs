@@ -66,7 +66,10 @@ mod tests {
                 output_redirected: false,
                 terminal_columns: 100,
                 theme: Box::new(DefaultTheme {}),
-                flags: Flags { as_json: true, ..Flags::default() },
+                flags: Flags {
+                    as_json: true,
+                    ..Flags::default()
+                },
                 headers: RefCell::new(HeaderMap::new()),
                 items: RefCell::new(Items::new()),
                 raw: None,
@@ -88,7 +91,10 @@ mod tests {
                 output_redirected: false,
                 terminal_columns: 100,
                 theme: Box::new(DefaultTheme {}),
-                flags: Flags { as_json: false, ..Flags::default() },
+                flags: Flags {
+                    as_json: false,
+                    ..Flags::default()
+                },
                 headers: RefCell::new(HeaderMap::new()),
                 items: RefCell::new(items),
                 raw: None,
@@ -108,7 +114,10 @@ mod tests {
                 output_redirected: false,
                 terminal_columns: 100,
                 theme: Box::new(DefaultTheme {}),
-                flags: Flags { as_form: true, ..Flags::default() },
+                flags: Flags {
+                    as_form: true,
+                    ..Flags::default()
+                },
                 headers: RefCell::new(HeaderMap::new()),
                 items: RefCell::new(Items::new()),
                 raw: None,
@@ -128,7 +137,10 @@ mod tests {
                 output_redirected: false,
                 terminal_columns: 100,
                 theme: Box::new(DefaultTheme {}),
-                flags: Flags { show_version: true, ..Flags::default() },
+                flags: Flags {
+                    show_version: true,
+                    ..Flags::default()
+                },
                 headers: RefCell::new(HeaderMap::new()),
                 items: RefCell::new(Items::new()),
                 raw: None,
@@ -145,7 +157,10 @@ mod tests {
                 output_redirected: false,
                 terminal_columns: 100,
                 theme: Box::new(DefaultTheme {}),
-                flags: Flags { show_help: true, ..Flags::default() },
+                flags: Flags {
+                    show_help: true,
+                    ..Flags::default()
+                },
                 headers: RefCell::new(HeaderMap::new()),
                 items: RefCell::new(Items::new()),
                 raw: None,
