@@ -10,6 +10,14 @@ use ansi_term::Color as AnsiTermColor;
 use ansi_term::Style as AnsiTermStyle;
 use std::io::{Result, Write};
 
+#[inline]
+pub fn enable_colors() -> bool {
+    #[cfg(windows)]
+    return ansi_term::enable_ansi_support().is_ok();
+    #[cfg(not(windows))]
+    true
+}
+
 pub struct Shell<'a, OD, O, E> {
     os_dirs: &'a OD,
     out: O,
@@ -34,11 +42,9 @@ impl<'a, OD: OsDirs, O: Write, E: Write> Shell<'a, OD, O, E> {
         self.os_dirs
     }
 
+    #[inline]
     pub fn enable_colors(&self) -> bool {
-        #[cfg(windows)]
-        return ansi_term::enable_ansi_support().is_ok();
-        #[cfg(not(windows))]
-        true
+        enable_colors()
     }
 
     // pub fn flush(&mut self) -> Result<()> {
