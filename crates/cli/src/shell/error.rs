@@ -1,4 +1,4 @@
-use super::Render;
+use super::{Render, enable_colors};
 use crate::theme::style::Color;
 use std::{
     fmt::Display,
@@ -18,7 +18,7 @@ impl<T: Display> ErrorRender<T> {
 impl<T: Display> Render for ErrorRender<T> {
     #[inline]
     fn is_style_active(&self) -> bool {
-        true
+        enable_colors()
     }
 
     #[inline]
