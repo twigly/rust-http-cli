@@ -42,7 +42,7 @@ You can use ```rh``` right now, and some new features are coming soon. New featu
 
 If you frequently execute the same requests, ```rh``` can save you time. An **alias** helps to change default values or create shortcuts. You can predefine what you like: it could be just the headers, or it could be everything.
 
-For example, someone could create an alias ```mp1-status``` (that would stand for "my-project-1" for example). Let's say you want to execute the following command on a regular basis:
+For example, someone could create an alias ```mp1-status``` (that would stand for "my-project-1", for example). Let's say you want to execute the following command on a regular basis:
 
 ```bash
 > rh http://local-dev-mp1/status -UHhc X-Custom-Header:My-app
