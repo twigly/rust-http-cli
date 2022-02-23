@@ -9,7 +9,7 @@ The command name in your terminal is ```rh```.
 
 ```rh``` is a user-friendly, lightweight and performant command-line tool to request HTTP APis. You can debug, test and verify any HTTP APi with ```rh``` in a simple and efficient way. ```rh``` is focused on performance and stability. You don't need OpenSSL because ```rh``` is based on Rustls, a modern TLS library alternative to OpenSSL.
 
-```rh``` is a standalone application with no runtime or garbage collector, so it doesn't require Python or Java to be installed on your machine for example. ```rh``` is based on [Rust,](https://www.rust-lang.org) which is a blazing fast and memory-efficient language.
+```rh``` is a standalone application with no runtime or garbage collector, so it doesn't require Python or Java to be installed on your machine, for example. ```rh``` is based on [Rust,](https://www.rust-lang.org) which is a blazing fast and memory-efficient language.
 
 The name ```rh``` stands for Rust HTTP.
 
