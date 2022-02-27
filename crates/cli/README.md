@@ -9,7 +9,7 @@ The command name in your terminal is ```rh```.
 
 ```rh``` is a user-friendly, lightweight and performant command-line tool to request HTTP APis. You can debug, test and verify any HTTP APi with ```rh``` in a simple and efficient way. ```rh``` is focused on performance and stability. You don't need OpenSSL because ```rh``` is based on Rustls, a modern TLS library alternative to OpenSSL.
 
-```rh``` is a standalone application with no runtime or garbage collector, so it doesn't require Python or Java installed on your machine for example. ```rh``` is based on [Rust](https://www.rust-lang.org) that is a blazing fast and memory-efficient language.
+```rh``` is a standalone application with no runtime or garbage collector, so it doesn't require Python or Java to be installed on your machine, for example. ```rh``` is based on [Rust,](https://www.rust-lang.org) which is a blazing fast and memory-efficient language.
 
 The name ```rh``` stands for Rust HTTP.
 
@@ -23,7 +23,7 @@ The name ```rh``` stands for Rust HTTP.
 
 # Features
 
-You can already use ```rh```, some features are not available yet. And new features will come based on your requests (please [file an issue](https://github.com/twigly/rh/issues) to do so).
+You can use ```rh``` right now, and some new features are coming soon. New features will be based on user request (please [file an issue](https://github.com/twigly/rh/issues) to make suggestions/requests.)
 
 - [X] Simple syntax to be more intuitive
 - [X] Easy file download & upload
@@ -40,9 +40,9 @@ You can already use ```rh```, some features are not available yet. And new featu
 
 # Don't repeat yourself
 
-If you're used to execute very often the same requests, you can save time. An **alias** helps to change default values or create shortcuts. You can predefine what you like, it could be only the headers for example, or everything.
+If you frequently execute the same requests, ```rh``` can save you time. An **alias** helps to change default values or create shortcuts. You can predefine what you like: it could be just the headers, or it could be everything.
 
-For example, someone could create an alias ```mp1-status``` (that would stand for "my-project-1" for example). Let's say you want to execute the following command very often:
+For example, someone could create an alias ```mp1-status``` (that would stand for "my-project-1", for example). Let's say you want to execute the following command on a regular basis:
 
 ```bash
 > rh http://local-dev-mp1/status -UHhc X-Custom-Header:My-app
@@ -116,4 +116,4 @@ You can download a file and save it:
 
 If you are interested in contributing to the ```rh``` project, please take a look at the [contributing guide](../../doc/contributing.md). If you'd like to request a feature or report a bug, please create a [GitHub issue](https://github.com/twigly/rh/issues).
 
-Thanks to the people developing the third party libraries used in this project.
+Thanks to everyone developing the third party libraries used in this project.
